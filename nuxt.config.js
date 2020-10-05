@@ -15,11 +15,11 @@ const routerBase =
 
 export default {
   env: {
-    dbUrl: isDev ? 'http://localhost:4000' : `https://${DB_URL}`,
+    dbUrl: isDev ? 'http://localhost:4001' : `https://${DB_URL}`,
     baseUriHasura: isDev
-      ? 'http://localhost:4000/v1/graphql'
+      ? 'http://localhost:4001/v1/graphql'
       : `https://${DB_URL}`,
-    baseWsHasura: isDev ? 'ws://localhost:4000/v1/graphql' : `wss://${DB_URL}`,
+    baseWsHasura: isDev ? 'ws://localhost:4001/v1/graphql' : `wss://${DB_URL}`,
   },
   mode: 'spa', // "spa" | "universal"
   /*

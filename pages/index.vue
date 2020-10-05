@@ -15,7 +15,7 @@
 
       <v-card-text>
         <v-icon>{{ mdiDatabase }}</v-icon> Database:
-        <a href="http://localhost:4000" target="_blank" class="link"
+        <a href="http://localhost:4001" target="_blank" class="link"
           >Hasura console</a
         >
         <hr class="my-3" />
@@ -45,9 +45,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" nuxt to="/crud">
-          CRUD and Subscriptions
-        </v-btn>
+        <v-btn color="primary" nuxt to="/crud"> CRUD and Subscriptions </v-btn>
       </v-card-actions>
     </v-card>
     User status:
