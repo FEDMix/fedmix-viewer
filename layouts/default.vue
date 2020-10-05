@@ -91,16 +91,16 @@ export default {
         },
         {
           icon: mdiDatabaseSync,
-          title: 'CRUD Database',
-          to: '/crud',
+          title: 'PCA',
+          to: '/pca',
         },
         {
           icon: mdiFileLockOutline,
-          title: 'Secret Page',
-          to: '/secure',
+          title: 'Research view',
+          to: '/research',
         },
       ],
-      title: 'Nuxt Apollo Hasura',
+      title: 'FEDMix viewer',
     }
   },
   computed: {
