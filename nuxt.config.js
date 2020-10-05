@@ -9,8 +9,8 @@ const DB_URL = 'nuxt-apollo-hasura.herokuapp.com'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-        base: '/nuxt-apollo-hasura/',
-      }
+      base: '/nuxt-apollo-hasura/',
+    }
     : {}
 
 export default {
@@ -50,7 +50,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/opencv-plugin.js'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -143,7 +143,11 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, ctx) {
+      config.node = {
+        fs: 'empty',
+      }
+    },
 
     babel: {
       presets({ isServer }) {
