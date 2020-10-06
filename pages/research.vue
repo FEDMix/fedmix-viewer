@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'Research view',
+  name: 'ResearchView',
   computed: {},
 }
 </script>
