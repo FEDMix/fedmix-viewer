@@ -96,8 +96,8 @@ export default {
         },
         {
           icon: mdiFileLockOutline,
-          title: 'Research view',
-          to: '/research',
+          title: 'Researcher view',
+          to: '/researcher-view',
         },
       ],
       title: 'FEDMix viewer',

@@ -43,8 +43,16 @@
                 {{ name }}
               </v-col>
               <v-col md="8" sm="6">
-                <p>Number of images: {{ images.length }}</p>
-                <nuxt-link :to="{ name: 'research', query: { folders: name } }">
+                <p>
+                  Number of images: {{ selected_folders.data.images.length }}
+                </p>
+                <nuxt-link
+                  :to="{
+                    name: 'researcher-view',
+                    query: { folders: name },
+                    params: { data: selected_folders },
+                  }"
+                >
                   <v-btn color="primary"> Analyze </v-btn>
                 </nuxt-link>
               </v-col>
@@ -93,6 +101,7 @@ export default {
           value.type.startsWith('application/json')
         )
       })
+      console.log('manifests', manifests)
       for (const manifest of manifests) {
         const re = /(.*)\//
         const folder_regexresult = re.exec(manifest.webkitRelativePath)
@@ -104,6 +113,7 @@ export default {
               value.type.startsWith('image')
             )
           })
+          console.log('images', this.images)
           if (!(folder_name in this.selected_folders)) {
             this.selected_folders[folder_name] = {
               name: folder_name,
@@ -118,6 +128,7 @@ export default {
       }
       this.folders = []
       localStorage.selected_folders = JSON.stringify(this.selected_folders)
+      console.log('Selected', this.selected_folders)
     },
     removeFolder(name) {
       if (name in this.selected_folders) {
