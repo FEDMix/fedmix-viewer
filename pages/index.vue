@@ -44,13 +44,13 @@
               </v-col>
               <v-col md="8" sm="6">
                 <p>
-                  Number of images: {{ selected_folders.data.images.length }}
+                  Number of images: {{ selected_folders[name].images.length }}
                 </p>
                 <nuxt-link
                   :to="{
                     name: 'researcher-view',
-                    query: { folders: name },
-                    params: { data: selected_folders },
+                    query: { name },
+                    params: { selected_folders },
                   }"
                 >
                   <v-btn color="primary"> Analyze </v-btn>
@@ -88,11 +88,11 @@ export default {
       folders: [],
     }
   },
-  mounted() {
-    if (localStorage.selected_folders) {
-      this.selected_folders = JSON.parse(localStorage.selected_folders)
-    }
-  },
+  // mounted() {
+  //   if (localStorage.selected_folders) {
+  //     this.selected_folders = localStorage.getItem('selected_folders')
+  //   }
+  // },
   methods: {
     addFolder() {
       const manifests = this.folders.filter((value, index, array) => {
@@ -101,7 +101,6 @@ export default {
           value.type.startsWith('application/json')
         )
       })
-      console.log('manifests', manifests)
       for (const manifest of manifests) {
         const re = /(.*)\//
         const folder_regexresult = re.exec(manifest.webkitRelativePath)
@@ -113,7 +112,6 @@ export default {
               value.type.startsWith('image')
             )
           })
-          console.log('images', this.images)
           if (!(folder_name in this.selected_folders)) {
             this.selected_folders[folder_name] = {
               name: folder_name,
@@ -127,13 +125,19 @@ export default {
         }
       }
       this.folders = []
-      localStorage.selected_folders = JSON.stringify(this.selected_folders)
-      console.log('Selected', this.selected_folders)
+      // localStorage.selected_folders = JSON.stringify(this.selected_folders)
+      // localStorage.setItem(
+      //   'selected_folders',
+      //   JSON.stringify(this.selected_folders)
+      // )
+      // console.log('Selected', localStorage.getItem('selected_folders'))
+
+      // console.log('class', this.selected_folders)
     },
     removeFolder(name) {
       if (name in this.selected_folders) {
         this.$delete(this.selected_folders, name)
-        localStorage.selected_folders = JSON.stringify(this.selected_folders)
+        // localStorage.selected_folders = JSON.stringify(this.selected_folders)
       }
     },
   },
