@@ -1,5 +1,11 @@
 const manifestParser = {
   methods: {
+    parseManifest(manifestText, scan_files) {
+      let manifest = manifestText
+      scan_files.map((file) => {
+        manifest = this.filterScans(manifest, file)
+      })
+    },
     filterScans(manifest, file) {
       if (
         file.webkitRelativePath.match(/(.*)\/(.*)\/scans\/(.*)\/(.*)\.png/i)

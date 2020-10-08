@@ -23,10 +23,7 @@ export default {
   },
   mounted() {
     this.getManifestText().then((manifestText) => {
-      this.result = manifestText
-      this.scan_files.map((file) => {
-        this.result = this.filterScans(this.result, file)
-      })
+      this.manifest = this.parseManifest(manifestText, this.scan_files)
     })
   },
   methods: {
