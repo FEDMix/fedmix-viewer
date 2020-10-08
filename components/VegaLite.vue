@@ -1,10 +1,14 @@
 <template>
-  <div id="viz"></div>
+  <div :id="chartContainer"></div>
 </template>
 <script>
 import embed from 'vega-embed'
 export default {
   props: {
+    chartTitle: {
+      type: String,
+      default: '',
+    },
     chartData: {
       type: Array,
       default() {
@@ -18,22 +22,36 @@ export default {
         return {}
       },
     },
+    chartContainer: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
       def: {
-        $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
-        description: 'A simple bar chart with embedded data.',
+        $schema: 'https://vega.github.io/schema/vega-lite/v4.0.json',
+        title: this.chartTitle,
         data: {
-          values: this.chartData,
+          name: 'myData',
         },
         mark: this.mark,
         encoding: this.encoding,
       },
     }
   },
-  async mounted() {
-    await embed('#viz', this.def, { actions: false })
+  watch: {
+    chartData(newValue) {
+      this.draw()
+    },
+  },
+
+  methods: {
+    draw() {
+      embed('#' + this.chartContainer, this.def, 'vega-lite')
+        .then((res) => res.view.insert('myData', this.chartData).run())
+        .catch((err) => console.log(err))
+    },
   },
 }
 </script>
