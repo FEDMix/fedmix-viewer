@@ -27,7 +27,7 @@ export default {
         image.src = URL.createObjectURL(input.files[0])
 
         image.onload = function () {
-          const matImage = new cv.imread(image)
+          const matImage = cv.imread(image)
           cv.imshow('target', matImage)
         }
       }
