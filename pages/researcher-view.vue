@@ -1,17 +1,22 @@
 <template>
-  <div></div>
+  <div>
+    <DiceChart :cases="cases" />
+  </div>
 </template>
 
 <script>
 import manifestParser from '../mixins/manifestParser'
+import DiceChart from '../components/DiceChart'
 export default {
   name: 'ResearcherView',
+  components: { DiceChart },
   mixins: [manifestParser],
   data() {
     return {
       manifest: File,
       scan_files: [],
       result: {},
+      cases: {},
     }
   },
 
@@ -24,11 +29,13 @@ export default {
   mounted() {
     this.getManifestText().then((manifestText) => {
       this.result = { ...manifestText }
+      this.cases = manifestText.cases
       this.scan_files.map((file) => {
         this.filterScans(file)
       })
     })
   },
+
   methods: {
     async getManifestText() {
       const text = await this.manifest.text()
