@@ -55,6 +55,15 @@
                 >
                   <v-btn color="primary"> Analyze </v-btn>
                 </nuxt-link>
+                <nuxt-link
+                  :to="{
+                    name: 'pca',
+                    query: { name },
+                    params: { selected_folders },
+                  }"
+                >
+                  <v-btn color="primary"> PCA </v-btn>
+                </nuxt-link>
               </v-col>
               <v-col md="1" sm="2">
                 <v-btn

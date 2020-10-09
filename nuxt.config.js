@@ -9,8 +9,8 @@ const DB_URL = 'nuxt-apollo-hasura.herokuapp.com'
 const routerBase =
   process.env.DEPLOY_ENV === 'GH_PAGES'
     ? {
-      base: '/nuxt-apollo-hasura/',
-    }
+        base: '/nuxt-apollo-hasura/',
+      }
     : {}
 
 export default {
@@ -38,6 +38,11 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        src: 'https://cdn.jsdelivr.net/npm/danfojs@0.1.2/dist/index.min.js',
+      },
+    ],
   },
   /*
    ** Customize the progress-bar color

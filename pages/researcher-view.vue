@@ -28,6 +28,7 @@ export default {
   },
   mounted() {
     this.getManifestText().then((manifestText) => {
+      this.manifest = this.parseManifest(manifestText, this.scan_files)
       this.result = { ...manifestText }
       this.cases = manifestText.cases
       this.scan_files.map((file) => {
