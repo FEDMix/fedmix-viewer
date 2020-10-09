@@ -25,6 +25,9 @@
     "@nuxtjs/pwa": "^3.1.2",
     "fs": "^0.0.1-security",
     "lodash.debounce": "^4.0.8",
+    "vega": "^5.17.0",
+    "vega-embed": "^6.12.2",
+    "vega-lite": "^4.16.8"
     "nuxt": "^2.14.6",
     "opencv.js": "^1.2.1"
   },
