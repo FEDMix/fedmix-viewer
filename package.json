@@ -5,7 +5,7 @@
   "description": "Nuxt Apollo Hasura Postgres Template",
   "author": "Jesus Garcia Gonzalez",
   "scripts": {
-    "serve": "concurrently \"docker-compose up -d\" \"nuxt\"",
+    "serve": "nuxt",
     "build": "nuxt build",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",
@@ -26,6 +26,9 @@
     "fs": "^0.0.1-security",
     "lodash.debounce": "^4.0.8",
     "machinelearn": "^2.1.5",
+    "vega": "^5.17.0",
+    "vega-embed": "^6.12.2",
+    "vega-lite": "^4.16.8",
     "nuxt": "^2.14.6",
     "opencv.js": "^1.2.1"
   },
