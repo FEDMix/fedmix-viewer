@@ -5,6 +5,7 @@ const manifestParser = {
       scan_files.map((file) => {
         manifest = this.filterScans(manifest, file)
       })
+      return manifest
     },
     filterScans(manifest, file) {
       if (
