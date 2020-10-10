@@ -14,6 +14,7 @@ const routerBase =
     : {}
 
 export default {
+  components: true,
   env: {
     dbUrl: isDev ? 'http://localhost:4001' : `https://${DB_URL}`,
     baseUriHasura: isDev
@@ -67,7 +68,12 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/pwa', '@nuxtjs/apollo', '@nuxtjs/auth', '@nuxtjs/axios'],
+  modules: [
+    '@nuxtjs/pwa',
+    // '@nuxtjs/apollo',
+    '@nuxtjs/auth',
+    '@nuxtjs/axios',
+  ],
 
   router: {
     ...routerBase,

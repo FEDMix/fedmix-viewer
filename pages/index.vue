@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <open-files />
     <v-row>
       <v-col cols="12">
         <v-card outlined>

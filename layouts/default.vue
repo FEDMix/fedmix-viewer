@@ -7,7 +7,7 @@
       fixed
       app
       :width="220"
-      mobile-break-point="759"
+      mobile-breakpoint="480"
     >
       <v-list>
         <v-list-item
@@ -39,11 +39,11 @@
       <v-spacer />
       <login-button />
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-footer app class="flex">
       <img
         src="https://www.esciencecenter.nl/wp-content/themes/raadhuis/dist/assets/img/favicons/apple-touch-icon.png"
