@@ -1,15 +1,17 @@
 <template>
-  <div>
-    <DiceChart :cases="cases" />
-  </div>
+  <v-container>
+    <CaseChart :cases="cases" />
+    <SliceChart :cases="cases" />
+  </v-container>
 </template>
 
 <script>
 import manifestParser from '../mixins/manifestParser'
-import DiceChart from '../components/DiceChart'
+import CaseChart from '../components/CaseChart'
+import SliceChart from '../components/SliceChart'
 export default {
   name: 'ResearcherView',
-  components: { DiceChart },
+  components: { CaseChart, SliceChart },
   mixins: [manifestParser],
   data() {
     return {
