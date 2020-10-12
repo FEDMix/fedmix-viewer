@@ -37,6 +37,10 @@ export default {
         },
         mark: this.mark,
         encoding: this.encoding,
+        width: 400,
+        height: 300,
+        autosize: 'pad',
+        padding: 5,
       },
     }
   },
