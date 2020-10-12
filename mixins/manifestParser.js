@@ -55,7 +55,6 @@ const manifestParser = {
           file,
         }
       }
-      console.log('result', this.result)
     },
 
     ensureDirs(subdir, type, caseNr, algorithm) {

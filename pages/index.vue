@@ -125,19 +125,10 @@ export default {
         }
       }
       this.folders = []
-      // localStorage.selected_folders = JSON.stringify(this.selected_folders)
-      // localStorage.setItem(
-      //   'selected_folders',
-      //   JSON.stringify(this.selected_folders)
-      // )
-      // console.log('Selected', localStorage.getItem('selected_folders'))
-
-      // console.log('class', this.selected_folders)
     },
     removeFolder(name) {
       if (name in this.selected_folders) {
         this.$delete(this.selected_folders, name)
-        // localStorage.selected_folders = JSON.stringify(this.selected_folders)
       }
     },
   },
