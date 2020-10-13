@@ -3,6 +3,7 @@
     <v-row no-gutters>
       <v-col cols="12" sm="12" md="6">
         <v-slider
+          v-if="sliderData.length"
           v-model="sliderValue"
           label="Cases"
           :max="sliderData.length - 1"
@@ -22,28 +23,30 @@
         ></v-select>
       </v-col>
     </v-row>
-    <v-row no-gutters>
-      <v-col cols="12" sm="12" md="6">
-        <VegaLite
-          :chart-data="formatData()"
-          chart-title="Dice vs Case Slice"
-          mark="point"
-          :encoding="getEncoding('Dice')"
-          chart-container="dice-slice"
-        >
-        </VegaLite>
-      </v-col>
-      <v-col cols="12" sm="12" md="6">
-        <VegaLite
-          :chart-data="formatData('SDSC_2mm')"
-          chart-title="Surface Dice vs Case Slice"
-          mark="point"
-          :encoding="getEncoding('Surface Dice')"
-          chart-container="surface-dice-slice"
-        >
-        </VegaLite>
-      </v-col>
-    </v-row>
+    <template v-if="cases[caseNo]">
+      <v-row no-gutters>
+        <v-col cols="12" sm="12" md="6">
+          <VegaLite
+            :chart-data="formatData()"
+            chart-title="Dice vs Case Slice"
+            mark="point"
+            :encoding="getEncoding('Dice')"
+            chart-container="dice-slice"
+          >
+          </VegaLite>
+        </v-col>
+        <v-col cols="12" sm="12" md="6">
+          <VegaLite
+            :chart-data="formatData('SDSC_2mm')"
+            chart-title="Surface Dice vs Case Slice"
+            mark="point"
+            :encoding="getEncoding('Surface Dice')"
+            chart-container="surface-dice-slice"
+          >
+          </VegaLite>
+        </v-col>
+      </v-row>
+    </template>
   </v-col>
 </template>
 <script>
@@ -62,47 +65,39 @@ export default {
   data() {
     return {
       selectedAlgorithm: 'all',
-      sliderValue: 5,
-      caseNo: 0,
+      sliderValue: 0,
     }
   },
   computed: {
     sliderData() {
       return Object.keys(this.cases)
     },
-  },
-  watch: {
-    sliderValue(newValue) {
-      this.caseNo = this.sliderData[this.sliderValue]
+    caseNo() {
+      return this.sliderData[this.sliderValue]
     },
-  },
-  mounted() {
-    this.sliderValue = 1
   },
   methods: {
     formatData(diceType = 'DSC') {
       const formattedData = []
-      if (Object.keys(this.cases).length > 0 && this.caseNo) {
-        Object.entries(this.cases[this.caseNo].algorithms).map(
-          (algorithm, i) => {
-            algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
-              if (algorithm[0] === this.selectedAlgorithm) {
-                formattedData.push({
-                  slice: j,
-                  dice,
-                  algorithm: algorithm[0],
-                })
-              } else if (this.selectedAlgorithm === 'all') {
-                formattedData.push({
-                  slice: j,
-                  dice,
-                  algorithm: algorithm[0],
-                })
-              }
-            })
-          }
-        )
-      }
+      Object.entries(this.cases[this.caseNo]?.algorithms).map(
+        (algorithm, i) => {
+          algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
+            if (algorithm[0] === this.selectedAlgorithm) {
+              formattedData.push({
+                slice: j,
+                dice,
+                algorithm: algorithm[0],
+              })
+            } else if (this.selectedAlgorithm === 'all') {
+              formattedData.push({
+                slice: j,
+                dice,
+                algorithm: algorithm[0],
+              })
+            }
+          })
+        }
+      )
       return formattedData
     },
     getAlgorithms() {
