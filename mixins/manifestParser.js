@@ -8,29 +8,17 @@ const manifestParser = {
       return manifest
     },
     filterScans(manifest, file) {
-      if (
-        file.webkitRelativePath.match(/(.*)\/(.*)\/scans\/(.*)\/(.*)\.png/i)
-      ) {
-        const scan = file.webkitRelativePath.match(
-          /(.*)\/(.*)\/scans\/(.*)\/(.*)\.png/i
-        )
+      if (file.webkitRelativePath.match(/(.*)\/(.*)\/scans\/(.*)\/(.*)\.png/i)) {
+        const scan = file.webkitRelativePath.match(/(.*)\/(.*)\/scans\/(.*)\/(.*)\.png/i)
         return this.parseScans(manifest, file, scan, 'scans')
       }
-      if (
-        file.webkitRelativePath.match(
-          /(.*)\/(.*)\/predicted_masks\/(.*)\/(.*)\.png/i
-        )
-      ) {
+      if (file.webkitRelativePath.match(/(.*)\/(.*)\/predicted_masks\/(.*)\/(.*)\.png/i)) {
         const predictions = file.webkitRelativePath.match(
           /(.*)\/(.*)\/predicted_masks\/(.*)\/(.*)\/(.*)\.png/i
         )
         return this.parseScans(manifest, file, predictions, 'predicted_masks')
       }
-      if (
-        file.webkitRelativePath.match(
-          /(.*)\/(.*)\/ground_truth_masks\/(.*)\/(.*)\.png/i
-        )
-      ) {
+      if (file.webkitRelativePath.match(/(.*)\/(.*)\/ground_truth_masks\/(.*)\/(.*)\.png/i)) {
         const groundtruth = file.webkitRelativePath.match(
           /(.*)\/(.*)\/ground_truth_masks\/(.*)\/(.*)\.png/i
         )

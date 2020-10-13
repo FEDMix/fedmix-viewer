@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <v-container>
       <h1>Login Page</h1>
       <v-alert v-if="errorMessage" show color="danger">
@@ -21,7 +21,7 @@
         <v-btn @click="$auth.logout()">Logout</v-btn>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>
@@ -38,10 +38,7 @@ export default {
   },
   computed: {
     redirect() {
-      return (
-        this.$route.query.redirect &&
-        decodeURIComponent(this.$route.query.redirect)
-      )
+      return this.$route.query.redirect && decodeURIComponent(this.$route.query.redirect)
     },
     errorMessage() {
       const { error } = this
@@ -80,9 +77,7 @@ export default {
     },
 
     loginWithGoogle() {
-      this.$auth
-        .loginWith('google')
-        .then(() => this.$toast.success('Logged In!'))
+      this.$auth.loginWith('google').then(() => this.$toast.success('Logged In!'))
     },
   },
 }

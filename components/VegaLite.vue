@@ -5,31 +5,15 @@
 import embed from 'vega-embed'
 export default {
   props: {
-    chartTitle: {
-      type: String,
-      default: '',
-    },
-    chartData: {
-      type: Array,
-      default() {
-        return []
-      },
-    },
+    chartTitle: { type: String, default: '' },
+    chartData: { type: Array, default: () => [] },
     mark: { type: String, default: 'point' },
-    encoding: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
-    chartContainer: {
-      type: String,
-      default: '',
-    },
+    encoding: { type: Object, default: () => ({}) },
+    chartContainer: { type: String, default: '' },
   },
-  data() {
-    return {
-      def: {
+  computed: {
+    def() {
+      return {
         $schema: 'https://vega.github.io/schema/vega-lite/v4.0.json',
         title: this.chartTitle,
         data: {
@@ -37,8 +21,11 @@ export default {
         },
         mark: this.mark,
         encoding: this.encoding,
-      },
-    }
+      }
+    },
+  },
+  mounted() {
+    this.draw()
   },
   watch: {
     chartData(newValue) {

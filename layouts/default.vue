@@ -7,16 +7,10 @@
       fixed
       app
       :width="220"
-      mobile-break-point="759"
+      mobile-breakpoint="360"
     >
       <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
@@ -28,22 +22,15 @@
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon v-if="miniVariant">{{ mdiChevronRight }}</v-icon>
-        <v-icon v-else>{{ mdiChevronLeft }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>{{ mdiApplication }}</v-icon>
-      </v-btn>
+
       <v-toolbar-title class="ml-4" v-text="title" />
       <v-spacer />
-      <login-button />
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-footer app class="flex">
       <img
         src="https://www.esciencecenter.nl/wp-content/themes/raadhuis/dist/assets/img/favicons/apple-touch-icon.png"
@@ -59,6 +46,8 @@
 
 <script>
 import {
+  mdiFlaskOutline,
+  mdiHospitalBuilding,
   mdiChevronRight,
   mdiChevronLeft,
   mdiApplication,
@@ -67,12 +56,12 @@ import {
   mdiFileLockOutline,
 } from '@mdi/js'
 import { version } from '~/package.json'
-import LoginButton from '~/components/LoginButton'
 
 export default {
-  components: { LoginButton },
   data() {
     return {
+      mdiFlaskOutline,
+      mdiHospitalBuilding,
       mdiChevronRight,
       mdiChevronLeft,
       mdiApplication,
@@ -90,14 +79,14 @@ export default {
           to: '/',
         },
         {
-          icon: mdiDatabaseSync,
-          title: 'PCA',
-          to: '/pca',
-        },
-        {
-          icon: mdiFileLockOutline,
+          icon: mdiFlaskOutline,
           title: 'Researcher view',
           to: '/researcher-view',
+        },
+        {
+          icon: mdiHospitalBuilding,
+          title: 'Clinical View',
+          to: '/clinic-view',
         },
       ],
       title: 'FEDMix viewer',
