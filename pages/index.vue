@@ -81,7 +81,7 @@
           </v-container>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row>-->
   </v-container>
 </template>
 
@@ -106,10 +106,7 @@ export default {
   methods: {
     addFolder() {
       const manifests = this.folders.filter((value, index, array) => {
-        return (
-          value.name.startsWith('manifest') &&
-          value.type.startsWith('application/json')
-        )
+        return value.name.startsWith('manifest') && value.type.startsWith('application/json')
       })
       for (const manifest of manifests) {
         const re = /(.*)\//
@@ -118,8 +115,7 @@ export default {
           const folder_name = folder_regexresult[1]
           const images = this.folders.filter((value, index, array) => {
             return (
-              value.webkitRelativePath.startsWith(folder_name) &&
-              value.type.startsWith('image')
+              value.webkitRelativePath.startsWith(folder_name) && value.type.startsWith('image')
             )
           })
           if (!(folder_name in this.selected_folders)) {

@@ -1,24 +1,60 @@
 <template>
-  <div class="wrapper">
-    <v-row>
-      <v-btn @click="open">Open directory</v-btn>
-      <v-btn v-if="Object.keys(tree).length !== 0" icon @click="cleanDB">
-        <v-icon>{{ mdiClose }}</v-icon>
+  <v-card class="pa-4" outlined>
+    <div class="d-flex">
+      <v-btn
+        depressed
+        :color="isTreeEmpty ? 'default' : 'primary'"
+        :loading="loadingFiles"
+        @click="open"
+      >
+        Open directory
       </v-btn>
-    </v-row>
-    <div
-      v-for="(item, key) in tree"
-      :key="key"
-      class="item"
-      @click="fileClicked(item)"
-    >
-      {{ key }}
-      <v-icon color="blue lighten-3">
-        {{ item.handle.kind === 'file' ? mdiFileDocumentOutline : mdiFolder }}
-      </v-icon>
-      {{ item.name }}
+      <div v-if="isTreeEmpty" class="d-flex">
+        <template>
+          <v-row no-gutters justify="center" class="mx-6">
+            <v-dialog v-model="dialog" scrollable max-width="600px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-hover>
+                  <div v-bind="attrs" v-on="on" class="mt-1">
+                    <v-icon color="blue lighten-3">{{ mdiFolder }}</v-icon>
+                    {{ numberFiles.directories }}
+                    <v-icon color="blue lighten-3">{{ mdiFileDocumentOutline }}</v-icon>
+                    {{ numberFiles.files }}
+                  </div>
+                </v-hover>
+              </template>
+              <v-card>
+                <v-card-title>Opened files and directories</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text style="height: 700px">
+                  <div
+                    v-for="(item, key) in tree"
+                    :key="key"
+                    class="item"
+                    @click="fileClicked(item)"
+                  >
+                    {{ key }}
+                    <v-icon color="blue lighten-3">
+                      {{ item.handle.kind === 'file' ? mdiFileDocumentOutline : mdiFolder }}
+                    </v-icon>
+                    {{ item.name }}
+                  </div>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn color="blue darken-1" text @click="dialog = false"> Close </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </template>
+
+        <v-btn icon @click="cleanDB">
+          <v-icon>{{ mdiClose }}</v-icon>
+        </v-btn>
+      </div>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -30,6 +66,9 @@ export default {
 
   data() {
     return {
+      dialog: false,
+      numberFiles: { rootName: '', directories: 0, files: 0 },
+      loadingFiles: false,
       db: null,
       arrayTree: [],
       tree: {},
@@ -38,6 +77,11 @@ export default {
       mdiFileDocumentOutline,
       mdiClose,
     }
+  },
+  computed: {
+    isTreeEmpty() {
+      return Object.keys(this.tree).length !== 0
+    },
   },
   async mounted() {
     // Create DB in indexDB
@@ -84,16 +128,22 @@ export default {
         }
       } catch (e) {}
     },
-
     async open() {
       try {
-        this.tree = {}
         const directoryHandle = await window.showDirectoryPicker()
-        this.db.put('store', directoryHandle, 'directory')
-        await this.recursive(directoryHandle)
+        await this.openDirectory(directoryHandle)
       } catch (e) {
+        this.loadingFiles = false
         console.error(e)
       }
+    },
+    async openDirectory(directoryHandle) {
+      this.loadingFiles = true
+      this.tree = {}
+      this.numberFiles = { rootName: '', directories: 0, files: 0 }
+      this.db.put('store', directoryHandle, 'directory')
+      await this.recursive(directoryHandle)
+      this.loadingFiles = false
     },
 
     /**
@@ -103,8 +153,11 @@ export default {
       try {
         for await (const [name, handle] of directoryHandle) {
           if (handle.kind === 'directory') {
+            this.numberFiles.directories++
             // if item is a directory enter to the folder
             await this.recursive(handle, path + name + '/')
+          } else {
+            this.numberFiles.files++
           }
           // Make vue reactive when changing the object ==> this.tree[path + name] = { name, handle }
           this.$set(this.tree, path + name, { name, handle })
@@ -117,9 +170,6 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  cursor: pointer;
-}
 .item {
   padding: 4px;
 }
