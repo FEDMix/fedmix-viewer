@@ -1,6 +1,7 @@
 <template>
   <div>
     Cases: {{ Object.entries(cases).length }}
+    <br />
     <VegaLite
       :chart-data="formatCases()"
       :encoding="getEncoding('Dice')"
