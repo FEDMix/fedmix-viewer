@@ -33,6 +33,11 @@ export default {
       },
     },
   },
+  watch: {
+    cases() {
+      console.log('Foo Changed!')
+    },
+  },
   methods: {
     formatCases(diceType = 'DSC') {
       const formattedCases = []

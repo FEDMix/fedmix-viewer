@@ -1,146 +1,51 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12">
-        <v-card outlined>
-          <v-card-title class="headline">Add Folders</v-card-title>
-          <v-container>
-            <v-row justify="center">
-              <v-col cols="10">
-                <v-file-input
-                  id="filedir"
-                  v-model="folders"
-                  label="Folders"
-                  counter
-                  color="primary"
-                  placeholder="Select your folders"
-                  outlined
-                  multiple
-                  webkitdirectory
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-btn color="primary" fab dark @click="addFolder()">
-                  <v-icon dark x-large>{{ mdiPlus }}</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card id="folder-list" outlined>
-          <v-card-title class="headline">Folders</v-card-title>
-          <v-container v-if="selected_folders">
-            <v-row
-              v-for="(images, name) in selected_folders"
-              :key="name"
-              class="folders"
-            >
-              <v-col md="3" sm="4">
-                {{ name }}
-              </v-col>
-              <v-col md="8" sm="6">
-                <p>
-                  Number of images: {{ selected_folders[name].images.length }}
-                </p>
-                <nuxt-link
-                  :to="{
-                    name: 'researcher-view',
-                    query: { name },
-                    params: { selected_folders },
-                  }"
-                >
-                  <v-btn color="primary"> Analyze </v-btn>
-                </nuxt-link>
-              </v-col>
-              <v-col md="1" sm="2">
-                <v-btn
-                  color="error"
-                  fab
-                  dark
-                  x-small
-                  @click="removeFolder(name)"
-                >
-                  <v-icon dark small>{{ mdiDelete }}</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-alert text type="info">Drag your dataset files into '/../..'</v-alert>
+    <datasets :datasets="datasets" />
   </v-container>
 </template>
 
 <script>
-import { mdiPlus, mdiDelete } from '@mdi/js'
+import Datasets from '@/pages/Datasets'
 
 export default {
   name: 'Home',
-  data() {
-    return {
-      mdiPlus,
-      mdiDelete,
-      selected_folders: {},
-      folders: [],
-    }
-  },
-  // mounted() {
-  //   if (localStorage.selected_folders) {
-  //     this.selected_folders = localStorage.getItem('selected_folders')
-  //   }
-  // },
-  methods: {
-    addFolder() {
-      const manifests = this.folders.filter((value, index, array) => {
-        return (
-          value.name.startsWith('manifest') &&
-          value.type.startsWith('application/json')
-        )
-      })
-      for (const manifest of manifests) {
-        const re = /(.*)\//
-        const folder_regexresult = re.exec(manifest.webkitRelativePath)
-        if (folder_regexresult[0].endsWith('/')) {
-          const folder_name = folder_regexresult[1]
-          const images = this.folders.filter((value, index, array) => {
-            return (
-              value.webkitRelativePath.startsWith(folder_name) &&
-              value.type.startsWith('image')
-            )
-          })
-          if (!(folder_name in this.selected_folders)) {
-            this.selected_folders[folder_name] = {
-              name: folder_name,
-              manifest,
-              images,
-            }
-          }
-        } else {
-          // TODO: NEEDS SOME ERROR POPUP
-          console.log('No manifest file in uploaded folder')
-        }
-      }
-      this.folders = []
-    },
-    removeFolder(name) {
-      if (name in this.selected_folders) {
-        this.$delete(this.selected_folders, name)
-      }
-    },
-  },
+  components: { Datasets },
+  data: () => ({
+    selected: [2],
+    datasets: [
+      {
+        action: '15 min',
+        headline: 'Brunch this weekend?',
+        subtitle:
+          "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
+        title: 'Ali Connors',
+      },
+      {
+        action: '2 hr',
+        headline: 'Summer BBQ',
+        subtitle: "Wish I could come, but I'm out of town this weekend.",
+        title: 'me, Scrott, Jennifer',
+      },
+      {
+        action: '6 hr',
+        headline: 'Oui oui',
+        subtitle: 'Do you have Paris recommendations? Have you ever been?',
+        title: 'Sandra Adams',
+      },
+      {
+        action: '12 hr',
+        headline: 'Birthday gift',
+        subtitle: 'Have any ideas about what we should get Heidi for her birthday?',
+        title: 'Trevor Hansen',
+      },
+      {
+        action: '18hr',
+        headline: 'Recipe to try',
+        subtitle: 'We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
+        title: 'Britta Holt',
+      },
+    ],
+  }),
 }
 </script>
-
-<style lang="scss" scoped>
-#folder-list {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  display: block;
-}
-</style>
