@@ -1,17 +1,16 @@
 <template>
-  <div>
-    <DiceChart :cases="cases" />
-  </div>
+  <v-container>
+    <CaseChart :cases="cases" />
+    <SliceChart :cases="cases" />
+  </v-container>
 </template>
 
 <script>
-// import manifestParser from '../mixins/manifestParser'
-import DiceChart from '~/components/DiceChart'
-
+import CaseChart from '../components/CaseChart'
+import SliceChart from '../components/SliceChart'
 export default {
   name: 'ResearcherView',
-  components: { DiceChart },
-  // mixins: [manifestParser],
+  components: { CaseChart, SliceChart },
   async asyncData({ $axios }) {
     // API - '/datasets/{id}'
     const cases = await $axios.$get('/mocked-data/cases.json')

@@ -1,28 +1,29 @@
 <template>
-  <div>
-    Cases: {{ Object.entries(cases).length }}
-    <br />
-    <VegaLite
-      :chart-data="formatCases()"
-      :encoding="getEncoding('Dice')"
-      chart-title="Dice vs Cases"
-      mark="point"
-      chart-container="dice"
-    ></VegaLite>
-    <!---->
-    <VegaLite
-      :chart-data="formatCases('SDSC_2mm')"
-      :encoding="getEncoding('Surface Dice')"
-      chart-title="Surface Dice vs Cases"
-      mark="point"
-      chart-container="surface-dice"
-    ></VegaLite>
-  </div>
+  <v-row no-gutters>
+    <v-col cols="12" sm="12" md="6">
+      <VegaLite
+        :chart-data="formatCases()"
+        chart-title="Dice vs Cases"
+        mark="point"
+        :encoding="getEncoding('Dice')"
+        chart-container="dice-case"
+      ></VegaLite
+    ></v-col>
+    <v-col cols="12" sm="12" md="6">
+      <VegaLite
+        :chart-data="formatCases('SDSC_2mm')"
+        chart-title="Surface Dice vs Cases"
+        mark="point"
+        :encoding="getEncoding('Surface Dice')"
+        chart-container="surface-dice-case"
+      ></VegaLite>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import VegaLite from './VegaLite'
 export default {
-  name: 'DiceChart',
+  name: 'CaseChart',
   components: { VegaLite },
   props: {
     cases: {
@@ -40,6 +41,7 @@ export default {
   methods: {
     formatCases(diceType = 'DSC') {
       const formattedCases = []
+
       Object.entries(this.cases).map((caseArray) => {
         Object.entries(caseArray[1].algorithms).map((algorithm) => {
           formattedCases.push({
@@ -49,6 +51,7 @@ export default {
           })
         })
       })
+
       return formattedCases
     },
     getEncoding(chartTitle) {
