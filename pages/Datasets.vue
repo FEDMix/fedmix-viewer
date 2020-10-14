@@ -30,7 +30,7 @@
 </template>
 <script>
 export default {
-  name: 'datasets',
+  name: 'Datasets',
   props: {
     datasets: {},
   },

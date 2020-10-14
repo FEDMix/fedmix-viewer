@@ -79,25 +79,23 @@ export default {
   methods: {
     formatData(diceType = 'DSC') {
       const formattedData = []
-      Object.entries(this.cases[this.caseNo]?.algorithms).map(
-        (algorithm, i) => {
-          algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
-            if (algorithm[0] === this.selectedAlgorithm) {
-              formattedData.push({
-                slice: j,
-                dice,
-                algorithm: algorithm[0],
-              })
-            } else if (this.selectedAlgorithm === 'all') {
-              formattedData.push({
-                slice: j,
-                dice,
-                algorithm: algorithm[0],
-              })
-            }
-          })
-        }
-      )
+      Object.entries(this.cases[this.caseNo]?.algorithms).map((algorithm, i) => {
+        algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
+          if (algorithm[0] === this.selectedAlgorithm) {
+            formattedData.push({
+              slice: j,
+              dice,
+              algorithm: algorithm[0],
+            })
+          } else if (this.selectedAlgorithm === 'all') {
+            formattedData.push({
+              slice: j,
+              dice,
+              algorithm: algorithm[0],
+            })
+          }
+        })
+      })
       return formattedData
     },
     getAlgorithms() {
