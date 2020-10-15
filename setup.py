@@ -30,6 +30,10 @@ setup(
     license="Apache Software License 2.0",
     zip_safe=False,
     keywords='fedmix-backend',
+    entry_points={
+        'console_scripts':
+        ['fedmix-backend=fedmix_backend.fedmix_backend:main'],
+    },
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -43,6 +47,7 @@ setup(
     test_suite='tests',
     install_requires=[],  # FIXME: add your package's dependencies to this list
     setup_requires=[
+        'wheel',
         # dependency for `python setup.py test`
         'pytest-runner',
         # dependencies for `python setup.py build_sphinx`
@@ -53,10 +58,9 @@ setup(
     tests_require=[
         'pytest',
         'pytest-cov',
-        'pycodestyle',
+        'pytest-flake8',
     ],
     extras_require={
-        'dev':  ['prospector[with_pyroma]', 'yapf', 'isort'],
+        'dev': ['prospector[with_pyroma]', 'yapf', 'isort'],
     },
-    data_files=[('citation/fedmix_backend', ['CITATION.cff'])]
-)
+    data_files=[('citation/fedmix_backend', ['CITATION.cff'])])

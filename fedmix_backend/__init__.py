@@ -3,6 +3,8 @@
 import logging
 
 from .__version__ import __version__
+from .schema import get_schema
+from .datastore import Datastore
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 

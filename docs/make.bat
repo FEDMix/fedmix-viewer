@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=fedmix-backend
+set SPHINXPROJ=fedmix_backend
 
 if "%1" == "" goto help
 

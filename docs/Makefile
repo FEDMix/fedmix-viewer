@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = fedmix-backend
+SPHINXPROJ    = fedmix_backend
 SOURCEDIR     = .
 BUILDDIR      = _build
 
