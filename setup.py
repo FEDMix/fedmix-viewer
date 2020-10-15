@@ -26,6 +26,10 @@ setup(
     packages=[
         'fedmix_backend',
     ],
+    install_requires=[
+        'graphene>=2.1.8, <3', 'flask>=1.1.2, <2'
+        'flask-graphql>=2.0.1, <3'
+    ],
     include_package_data=True,
     license="Apache Software License 2.0",
     zip_safe=False,
@@ -45,7 +49,6 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     test_suite='tests',
-    install_requires=[],  # FIXME: add your package's dependencies to this list
     setup_requires=[
         'wheel',
         # dependency for `python setup.py test`
