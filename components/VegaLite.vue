@@ -11,9 +11,9 @@ export default {
     encoding: { type: Object, default: () => ({}) },
     chartContainer: { type: String, default: '' },
   },
-  computed: {
-    def() {
-      return {
+  data() {
+    return {
+      def: {
         $schema: 'https://vega.github.io/schema/vega-lite/v4.0.json',
         title: this.chartTitle,
         data: {
@@ -25,8 +25,8 @@ export default {
         height: 300,
         autosize: 'pad',
         padding: 5,
-      }
-    },
+      },
+    }
   },
   mounted() {
     this.draw()
