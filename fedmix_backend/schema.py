@@ -3,42 +3,35 @@ import logging
 import os
 import json
 
-from graphene import List, ObjectType, Field, String, ID, Int, Schema
+from graphene import List, ObjectType, Field, String, ID, Int, Schema, NonNull
 
 logger = logging.getLogger(__name__)
 
 
-def get_dataset(context, id):
-    return context.datastore.datasets[id]
-
-
 class Cluster(ObjectType):
-    name = String()
+    name = NonNull(String)
 
 
 class Dataset(ObjectType):
-    id = ID()
-    title = String()
-    clusters = List(Cluster)
+    id = NonNull(ID)
+    title = String(description="The title of the dataset")
+    clusters = List(Cluster,
+                    description="The clusters the algorithms were trained on")
+
+    def __init__(self, dataset, **args):
+        super().__init__(**args)
+        self._dataset = dataset
 
     @staticmethod
     def resolve_title(root, info):
-        dataset = get_dataset(info.context, root.id)
-        return dataset['title']
+        return root._dataset['title']
 
     @staticmethod
     def resolve_clusters(root, info):
-        dataset = get_dataset(info.context, root.id)
         return [
-            Cluster(name=cluster['name']) for cluster in dataset['clusters']
+            Cluster(name=cluster['name'])
+            for cluster in root._dataset['clusters']
         ]
-
-
-def get_datasets(context):
-    datasets = []
-    for key, _ in context.datastore.datasets.items():
-        datasets.append(Dataset(id=key))
-    return datasets
 
 
 class Query(ObjectType):
@@ -46,7 +39,10 @@ class Query(ObjectType):
 
     @staticmethod
     def resolve_datasets(root, info):
-        return get_datasets(info.context)
+        datasets = []
+        for key, dataset in info.context.datastore.datasets.items():
+            datasets.append(Dataset(dataset, id=key))
+        return datasets
 
 
 def get_schema():
