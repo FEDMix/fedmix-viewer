@@ -1,5 +1,5 @@
 <template>
-  <div :id="chartContainer"></div>
+  <div :id="chartContainer" class="chart-container"></div>
 </template>
 <script>
 import embed from 'vega-embed'
@@ -21,10 +21,9 @@ export default {
         },
         mark: this.mark,
         encoding: this.encoding,
-        width: 400,
+        width: 'container',
         height: 300,
         autosize: 'pad',
-        padding: 5,
       },
     }
   },
@@ -46,3 +45,8 @@ export default {
   },
 }
 </script>
+<style>
+.chart-container {
+  width: 80%;
+}
+</style>
