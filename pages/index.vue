@@ -1,5 +1,39 @@
 <template>
   <v-container>
+    <v-layout row wrap>
+      <v-flex md9>
+        <v-card-title>
+          <h1 style="font-weight: 900; text-shadow: 3px 2px #ddd">FEDMix</h1>
+        </v-card-title>
+        <v-card-text>
+          <p>
+            Automated Medical Image Analysis (MIA) has the potential to truly innovate clinical
+            practice by offering solutions to routine, yet key tasks, such as segmentation (i.e.,
+            delineating organs). Especially with recent advances in machine learning (ML), in
+            particular in Deep Neural Networks (DNNs) that have led to an explosive growth of
+            successful MIA studies reported in academic literature, the time appears right for such
+            innovations to find widespread real-world uptake.
+          </p>
+          <p>
+            Yet, labor-intensive manual performance of these tasks is still often daily clinical
+            practice. In this proposal, we integrate DNNs with other state-of-the-art computational
+            intelligence techniques, in particular evolutionary algorithms (EAs), to overcome 2 key
+            obstacles in moving toward widespread clinical uptake of computationally intelligent MIA
+            techniques: 1) observer variation in the definition of a ground truth, and 2) image
+            quality variation due to different acquisition protocols and scanners at different
+            institutes.
+          </p></v-card-text
+        >
+      </v-flex>
+      <v-flex md3>
+        <v-img
+          class="white--text align-end"
+          height="250px"
+          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        >
+        </v-img>
+      </v-flex>
+    </v-layout>
     <v-alert text type="info">Drag your dataset files into '/../..'</v-alert>
     <datasets :datasets="datasets" />
   </v-container>
