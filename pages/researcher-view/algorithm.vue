@@ -25,10 +25,10 @@
     </v-row>
     <v-row>
       <v-col cols="12" md="6">
-        <CaseChart :formatData="formatCases" />
+        <CaseChart :format-data="formatCases" />
       </v-col>
       <v-col cols="12" md="6">
-        <SliceChart :formatData="formatSliceChartData" />
+        <SliceChart :format-data="formatSliceChartData" />
       </v-col>
     </v-row>
   </v-container>

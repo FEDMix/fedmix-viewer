@@ -31,13 +31,13 @@ export default {
       },
     }
   },
-  mounted() {
-    this.draw()
-  },
   watch: {
     chartData(newValue) {
       this.draw()
     },
+  },
+  mounted() {
+    this.draw()
   },
 
   methods: {

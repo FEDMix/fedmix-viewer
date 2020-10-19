@@ -29,6 +29,7 @@ export default {
   props: {
     formatData: {
       type: Function,
+      default: () => {},
     },
   },
   methods: {
