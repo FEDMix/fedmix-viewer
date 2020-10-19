@@ -12,7 +12,7 @@
     </v-col>
     <v-col cols="12" sm="12" md="6">
       <VegaLite
-        :chart-data="onFormatData()"
+        :chart-data="onFormatData('SDSC_2mm')"
         chart-title="Surface Dice vs Case Slice"
         mark="point"
         :encoding="getEncoding('Surface Dice')"
@@ -35,7 +35,7 @@ export default {
 
   methods: {
     onFormatData(diceType = 'DSC') {
-      return this.formatData()
+      return this.formatData(diceType)
     },
 
     getEncoding(chartTitle) {
@@ -54,7 +54,7 @@ export default {
         color: { field: 'algorithm' },
         tooltip: [
           { field: 'slice', title: 'Slice' },
-          { field: 'dice', title: 'Dice' },
+          { field: 'dice', title: chartTitle },
         ],
       }
     },

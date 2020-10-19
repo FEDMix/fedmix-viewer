@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col md="6">
       <VegaLite
-        :chart-data="formatCases()"
+        :chart-data="onFormatCases()"
         chart-title="Dice vs Cases"
         mark="point"
         :encoding="getEncoding('Dice')"
@@ -12,7 +12,7 @@
 
     <v-col md="6">
       <VegaLite
-        :chart-data="formatCases('SDSC_2mm')"
+        :chart-data="onFormatCases('SDSC_2mm')"
         chart-title="Surface Dice vs Cases"
         mark="point"
         :encoding="getEncoding('Surface Dice')"
@@ -27,33 +27,13 @@ export default {
   name: 'CaseChart',
   components: { VegaLite },
   props: {
-    cases: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
-  },
-  watch: {
-    cases() {
-      console.log('Foo Changed!')
+    formatData: {
+      type: Function,
     },
   },
   methods: {
-    formatCases(diceType = 'DSC') {
-      const formattedCases = []
-
-      Object.entries(this.cases).map((caseArray) => {
-        Object.entries(caseArray[1].algorithms).map((algorithm) => {
-          formattedCases.push({
-            caseNumber: caseArray[0],
-            value: algorithm[1].metrics[diceType].value_for_patient,
-            algorithm: algorithm[0],
-          })
-        })
-      })
-
-      return formattedCases
+    onFormatCases(diceType = 'DSC') {
+      return this.formatData(diceType)
     },
     getEncoding(chartTitle) {
       return {

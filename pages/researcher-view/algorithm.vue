@@ -23,8 +23,8 @@
         ></v-select>
       </v-col>
     </v-row>
-    <!-- <CaseChart :cases="cases" /> -->
-    <SliceChart :formatData="formatData" />
+    <CaseChart :formatData="formatCases" />
+    <SliceChart :formatData="formatSliceChartData" />
   </div>
 </template>
 
@@ -48,16 +48,21 @@ export default {
       return this.sliderData[this.sliderValue]
     },
   },
-  // async asyncData({ $axios }) {
-  //   // API - '/datasets/{id}'
-  //   // const cases = await $axios.$get('/mocked-data/cases.json')
-  //   // return { cases }
-  //   const { data } = await $axios.$get('/mocked-data/cases.json')
-  //   console.log('data', data)
-  //   return { data }
-  // },
   methods: {
-    formatData(diceType = 'DSC') {
+    formatCases(diceType) {
+      const formattedCases = []
+      Object.entries(this.cases).map((caseArray) => {
+        Object.entries(caseArray[1].algorithms).map((algorithm) => {
+          formattedCases.push({
+            caseNumber: caseArray[0],
+            value: algorithm[1].metrics[diceType].value_for_patient,
+            algorithm: algorithm[0],
+          })
+        })
+      })
+      return formattedCases
+    },
+    formatSliceChartData(diceType) {
       const formattedData = []
       Object.entries(this.cases[this.caseNo]?.algorithms).map((algorithm, i) => {
         algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
