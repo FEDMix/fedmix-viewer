@@ -1,4 +1,4 @@
-.PHONY : backend frontend install install-dev
+.PHONY : backend frontend install install-dev run frontend-dist
 
 install:
 	cd frontend && yarn
@@ -20,4 +20,11 @@ backend:
 # run npm start inside ./frontend
 frontend:
 	cd frontend && yarn serve
+
+
+frontend-dist:
+	cd frontend && yarn && yarn build
+
+run: frontend-dist
+	docker-compose up
 
