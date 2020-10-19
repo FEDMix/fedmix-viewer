@@ -1,16 +1,13 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  /*
-   ** Nuxt rendering mode
-   ** See https://nuxtjs.org/api/configuration-mode
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+  },
+  /**
+   * Do not build serverside components
    */
-  mode: 'spa',
-  /*
-   ** Nuxt target
-   ** See https://nuxtjs.org/api/configuration-target
-   */
-  target: 'static',
+  ssr: false,
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -62,7 +59,9 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+      baseURL: process.env.baseUrl
+  },
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

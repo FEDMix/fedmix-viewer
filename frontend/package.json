@@ -6,7 +6,7 @@
   "author": "Jesus Garcia Gonzalez",
   "scripts": {
     "serve": "nuxt",
-    "build": "nuxt build",
+    "build": "BASE_URL=http://localhost:8080 nuxt build",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "yarn build:gh-pages && GIT_DEPLOY_REPO=https://github.com/NLeSC/nuxt-apollo-hasura scripts/deploy.sh",
     "analyze": "yarn nuxt build --analyze",
@@ -30,8 +30,7 @@
     "opencv.js": "^1.2.1",
     "vega": "^5.17.0",
     "vega-embed": "^6.12.2",
-    "vega-lite": "^4.16.8",
-    "vue-vega": "^1.0.0-alpha.13"
+    "vega-lite": "^4.16.8"
   },
   "devDependencies": {
     "@babel/runtime-corejs3": "^7.11.2",
