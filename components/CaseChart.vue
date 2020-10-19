@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col md="6">
+    <v-col xs="12" sm="12" lg="6">
       <VegaLite
         :chart-data="onFormatCases()"
         chart-title="Dice vs Cases"
@@ -10,7 +10,7 @@
       ></VegaLite
     ></v-col>
 
-    <v-col md="6">
+    <v-col xs="12" sm="12" lg="6">
       <VegaLite
         :chart-data="onFormatCases('SDSC_2mm')"
         chart-title="Surface Dice vs Cases"
@@ -49,7 +49,13 @@ export default {
           title: chartTitle,
           scale: { domain: [0.0, 1.0] },
         },
-        color: { field: 'algorithm' },
+        color: {
+          field: 'algorithm',
+          legend: {
+            orient: 'bottom',
+            direction: 'horizontal',
+          },
+        },
         tooltip: [
           { field: 'caseNumber', title: 'case' },
           { field: 'value', title: 'value' },
