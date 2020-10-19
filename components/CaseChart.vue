@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" sm="12" md="6">
+    <v-col md="6">
       <VegaLite
         :chart-data="formatCases()"
         chart-title="Dice vs Cases"
@@ -9,7 +9,8 @@
         chart-container="dice-case"
       ></VegaLite
     ></v-col>
-    <v-col cols="12" sm="12" md="6">
+
+    <v-col md="6">
       <VegaLite
         :chart-data="formatCases('SDSC_2mm')"
         chart-title="Surface Dice vs Cases"

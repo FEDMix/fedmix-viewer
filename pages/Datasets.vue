@@ -5,7 +5,7 @@
       <v-list two-line>
         <v-list-item-group>
           <template v-for="(item, index) in datasets">
-            <v-list-item :key="item.title" :to="'/researcher-view'">
+            <v-list-item :key="item.title" :to="'/researcher-view/algorithm'">
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
                 <v-list-item-subtitle

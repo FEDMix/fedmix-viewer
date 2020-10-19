@@ -1,5 +1,5 @@
 <template>
-  <div :id="chartContainer"></div>
+  <div :id="chartContainer" class="chart-container"></div>
 </template>
 <script>
 import embed from 'vega-embed'
@@ -11,9 +11,9 @@ export default {
     encoding: { type: Object, default: () => ({}) },
     chartContainer: { type: String, default: '' },
   },
-  computed: {
-    def() {
-      return {
+  data() {
+    return {
+      def: {
         $schema: 'https://vega.github.io/schema/vega-lite/v4.0.json',
         title: this.chartTitle,
         data: {
@@ -21,12 +21,11 @@ export default {
         },
         mark: this.mark,
         encoding: this.encoding,
-        width: 400,
+        width: 'container',
         height: 300,
         autosize: 'pad',
-        padding: 5,
-      }
-    },
+      },
+    }
   },
   mounted() {
     this.draw()
@@ -46,3 +45,8 @@ export default {
   },
 }
 </script>
+<style>
+.chart-container {
+  width: 80%;
+}
+</style>
