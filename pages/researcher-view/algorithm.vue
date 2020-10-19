@@ -1,20 +1,7 @@
 <template>
-  <div>
-    <v-row no-gutters>
-      <v-col cols="12" sm="12" md="6">
-        <v-slider
-          v-if="sliderData.length"
-          v-model="sliderValue"
-          label="Cases"
-          :max="sliderData.length - 1"
-          thumb-label="always"
-        >
-          <template v-slot:thumb-label>
-            {{ sliderData[sliderValue] }}
-          </template>
-        </v-slider>
-      </v-col>
-      <v-col cols="12" sm="12" md="6">
+  <v-container>
+    <v-row>
+      <v-col cols="12" sm="12" md="6" align-self="center">
         <v-select
           v-model="selectedAlgorithm"
           :items="getAlgorithms()"
@@ -22,10 +9,29 @@
           label="Select Algorithm"
         ></v-select>
       </v-col>
+      <v-col cols="12" sm="12" md="6" align-self="center">
+        <v-subheader>Case No: {{ sliderData[sliderValue] }}</v-subheader>
+        <v-slider
+          v-if="sliderData.length"
+          v-model="sliderValue"
+          :max="sliderData.length - 1"
+          :thumb-size="20"
+        >
+          <template v-slot:thumb-label>
+            {{ sliderData[sliderValue] }}
+          </template>
+        </v-slider>
+      </v-col>
     </v-row>
-    <CaseChart :formatData="formatCases" />
-    <SliceChart :formatData="formatSliceChartData" />
-  </div>
+    <v-row>
+      <v-col cols="12" md="6">
+        <CaseChart :formatData="formatCases" />
+      </v-col>
+      <v-col cols="12" md="6">
+        <SliceChart :formatData="formatSliceChartData" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -53,11 +59,19 @@ export default {
       const formattedCases = []
       Object.entries(this.cases).map((caseArray) => {
         Object.entries(caseArray[1].algorithms).map((algorithm) => {
-          formattedCases.push({
-            caseNumber: caseArray[0],
-            value: algorithm[1].metrics[diceType].value_for_patient,
-            algorithm: algorithm[0],
-          })
+          if (algorithm[0] === this.selectedAlgorithm) {
+            formattedCases.push({
+              caseNumber: caseArray[0],
+              value: algorithm[1].metrics[diceType].value_for_patient,
+              algorithm: algorithm[0],
+            })
+          } else if (this.selectedAlgorithm === 'all') {
+            formattedCases.push({
+              caseNumber: caseArray[0],
+              value: algorithm[1].metrics[diceType].value_for_patient,
+              algorithm: algorithm[0],
+            })
+          }
         })
       })
       return formattedCases
