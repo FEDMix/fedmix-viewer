@@ -1,0 +1,9 @@
+query datasets{
+    datasets{
+        id
+        title
+        clusters{
+            name
+        }
+    }
+}

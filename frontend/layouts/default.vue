@@ -77,11 +77,6 @@ export default {
           to: '/',
         },
         {
-          icon: mdiFlaskOutline,
-          title: 'Researcher view',
-          to: '/researcher-view',
-        },
-        {
           icon: mdiHospitalBuilding,
           title: 'Clinical View',
           to: '/clinic-view',

@@ -5,13 +5,12 @@
       <v-list two-line>
         <v-list-item-group>
           <template v-for="(item, index) in datasets">
-            <v-list-item :key="item.title" :to="'/researcher-view/algorithm'">
+            <v-list-item :key="item.id" :to="'/researcher-view/algorithm'">
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
-                <v-list-item-subtitle
-                  class="text--primary"
-                  v-text="item.headline"
-                ></v-list-item-subtitle>
+                <v-list-item-subtitle class="text--primary">
+                  Clusters: {{item.clusters.length}}
+                </v-list-item-subtitle>
                 <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
 

@@ -1,16 +1,13 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  /*
-   ** Nuxt rendering mode
-   ** See https://nuxtjs.org/api/configuration-mode
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+  },
+  /**
+   * Do not build serverside components
    */
-  mode: 'spa',
-  /*
-   ** Nuxt target
-   ** See https://nuxtjs.org/api/configuration-target
-   */
-  target: 'static',
+  ssr: false,
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -54,15 +51,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-  ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
+  modules: ['@nuxtjs/apollo', '@nuxtjs/proxy'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
@@ -89,4 +78,22 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {},
+  proxy: {
+    '/api': {
+      target: 'http://localhost:5000',
+      pathRewrite: {
+        '^/api': '/graphql',
+      },
+    },
+  },
+  /**
+   * Apollo
+   */
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: '/api',
+      },
+    },
+  },
 }

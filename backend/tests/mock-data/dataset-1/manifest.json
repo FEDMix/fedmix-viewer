@@ -1,0 +1,11 @@
+{
+    "title": "My First Dataset",
+    "clusters": [
+        {
+            "name": "cluster1"
+        },
+        {
+            "name": "cluster2"
+        }
+    ]
+}
