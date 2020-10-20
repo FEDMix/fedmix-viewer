@@ -1,4 +1,5 @@
 import configparser
+import os
 
 from flask import Flask, redirect, url_for
 from flask_graphql import GraphQLView
@@ -16,23 +17,25 @@ def index():
     return redirect(url_for('graphql'))
 
 
-app.add_url_rule(
-    '/graphql',
-    view_func=GraphQLView.as_view(
-        'graphql',
-        schema=get_schema(),
-        graphiql=True,
-        get_context=lambda: Context(datastore=Datastore('tests/mock-data/*'))))
+def add_routes(datadir):
+    app.add_url_rule(
+        '/graphql',
+        view_func=GraphQLView.as_view(
+            'graphql',
+            schema=get_schema(),
+            graphiql=True,
+            get_context=lambda: Context(datastore=Datastore(datadir))))
 
-# Optional, for adding batch query support (used in Apollo-Client)
-app.add_url_rule(
-    '/graphql',
-    view_func=GraphQLView.as_view(
-        'graphql-batch',
-        schema=get_schema(),
-        graphiql=True,
-        get_context=lambda: Context(datastore=Datastore('tests/mock-data/*')),
-        batch=True))
+    # Optional, for adding batch query support (used in Apollo-Client)
+    app.add_url_rule(
+        '/graphql',
+        view_func=GraphQLView.as_view(
+            'graphql-batch',
+            schema=get_schema(),
+            graphiql=True,
+            get_context=lambda: Context(datastore=Datastore(datadir)),
+            batch=True))
+
 
 CONFIGTEMPLATE = {
     'app': {
@@ -66,6 +69,17 @@ def main():
         servername = f'{hostname}:{port}'
         app.config.update(SERVER_NAME=servername)
         app.config.update(PREFERRED_URL_SCHEME=schema)
+
+    if 'datastore' not in config or 'directory' not in config['datastore']:
+        print('''Datastore not set correctly in configuration
+        Please add the following datastore section to config/config.ini and try again.
+
+        [datastore]
+        directory = data
+        ''')
+
+    datadir = config['datastore']['directory']
+    add_routes(datadir)
     app.run()
 
 

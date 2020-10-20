@@ -39,9 +39,10 @@ class Query(ObjectType):
 
     @staticmethod
     def resolve_datasets(root, info):
+        sets = info.context.datastore.datasets
         datasets = []
-        for key, dataset in info.context.datastore.datasets.items():
-            datasets.append(Dataset(dataset, id=key))
+        for key in sorted(sets.keys()):
+            datasets.append(Dataset(sets[key], id=key))
         return datasets
 
 
