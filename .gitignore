@@ -1,4 +1,1 @@
-node_modules
-.nuxt
-*.lock
-static/sw.js
+.idea
