@@ -24,7 +24,7 @@ def test_dataset_list(schema):
             }
         }
     }''',
-        context=Context(datastore=Datastore('tests/mock-data/*')))
+        context=Context(datastore=Datastore('tests/mock-data/')))
 
     print(data)
     # Check if all datasets are there
