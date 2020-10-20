@@ -16,7 +16,7 @@
 
               <v-list-item-action>
                 <v-list-item-action-text v-text="item.action"></v-list-item-action-text>
-                <v-btn :to="'/researcher-view'">View</v-btn>
+                <v-btn :to="'/researcher-view/algorithm'">View</v-btn>
               </v-list-item-action>
             </v-list-item>
 
