@@ -1,8 +1,8 @@
 <template>
   <v-row no-gutters>
-    <v-col md="6">
+    <v-col xs="12" sm="12" lg="6">
       <VegaLite
-        :chart-data="formatCases()"
+        :chart-data="onFormatCases()"
         chart-title="Dice vs Cases"
         mark="point"
         :encoding="getEncoding('Dice')"
@@ -10,9 +10,9 @@
       ></VegaLite
     ></v-col>
 
-    <v-col md="6">
+    <v-col xs="12" sm="12" lg="6">
       <VegaLite
-        :chart-data="formatCases('SDSC_2mm')"
+        :chart-data="onFormatCases('SDSC_2mm')"
         chart-title="Surface Dice vs Cases"
         mark="point"
         :encoding="getEncoding('Surface Dice')"
@@ -27,33 +27,14 @@ export default {
   name: 'CaseChart',
   components: { VegaLite },
   props: {
-    cases: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
-  },
-  watch: {
-    cases() {
-      console.log('Foo Changed!')
+    formatData: {
+      type: Function,
+      default: () => {},
     },
   },
   methods: {
-    formatCases(diceType = 'DSC') {
-      const formattedCases = []
-
-      Object.entries(this.cases).map((caseArray) => {
-        Object.entries(caseArray[1].algorithms).map((algorithm) => {
-          formattedCases.push({
-            caseNumber: caseArray[0],
-            value: algorithm[1].metrics[diceType].value_for_patient,
-            algorithm: algorithm[0],
-          })
-        })
-      })
-
-      return formattedCases
+    onFormatCases(diceType = 'DSC') {
+      return this.formatData(diceType)
     },
     getEncoding(chartTitle) {
       return {
@@ -69,7 +50,13 @@ export default {
           title: chartTitle,
           scale: { domain: [0.0, 1.0] },
         },
-        color: { field: 'algorithm' },
+        color: {
+          field: 'algorithm',
+          legend: {
+            orient: 'bottom',
+            direction: 'horizontal',
+          },
+        },
         tooltip: [
           { field: 'caseNumber', title: 'case' },
           { field: 'value', title: 'value' },

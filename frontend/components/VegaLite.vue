@@ -23,22 +23,26 @@ export default {
         encoding: this.encoding,
         width: 'container',
         height: 300,
-        autosize: 'pad',
+        autosize: {
+          type: 'fit',
+          resize: true,
+          contains: 'padding',
+        },
       },
     }
-  },
-  mounted() {
-    this.draw()
   },
   watch: {
     chartData(newValue) {
       this.draw()
     },
   },
+  mounted() {
+    this.draw()
+  },
 
   methods: {
     draw() {
-      embed('#' + this.chartContainer, this.def, 'vega-lite')
+      embed('#' + this.chartContainer, this.def, { actions: false })
         .then((res) => res.view.insert('myData', this.chartData).run())
         .catch((err) => console.log(err))
     },
