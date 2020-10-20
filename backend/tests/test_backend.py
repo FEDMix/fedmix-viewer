@@ -1,12 +1,18 @@
 import pytest
 import json
 
-from fedmix_backend import app
+from fedmix_backend import app, add_routes
+
+
+@pytest.fixture(scope="module", autouse=True)
+def add_test_data_folder():
+    add_routes('tests/mock-data/')
 
 
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
+
     with app.test_client() as client:
         yield client
 
