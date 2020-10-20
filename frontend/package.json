@@ -21,7 +21,6 @@
     "@mdi/js": "^5.7.55",
     "@nuxtjs/apollo": "^4.0.1-rc.4",
     "@nuxtjs/auth": "^4.9.1",
-    "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/proxy": "^2.0.1",
     "@nuxtjs/pwa": "^3.2.2",
     "fs": "^0.0.1-security",
