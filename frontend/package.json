@@ -1,9 +1,9 @@
 {
-  "name": "nuxt-apollo-hasura",
+  "name": "FEDMix",
   "version": "1.1.0",
   "private": true,
   "description": "Nuxt Apollo Hasura Postgres Template",
-  "author": "Jesus Garcia Gonzalez",
+  "author": "Netherlands eScience Center",
   "scripts": {
     "serve": "nuxt",
     "build": "BASE_URL=http://localhost:8080 nuxt build",
