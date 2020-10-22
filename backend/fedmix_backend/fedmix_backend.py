@@ -1,7 +1,8 @@
 import configparser
 import os
+from functools import partial
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, send_from_directory, url_for
 from flask_graphql import GraphQLView
 from graphene import Context
 
@@ -15,6 +16,15 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return redirect(url_for('graphql'))
+
+
+def send_file(datadir, path):
+    if not os.path.isabs(datadir):
+        # We prepend .. to the datadir because send_from_directory
+        # is relative to the module root, which is fedmix_backend
+        # but the configuration assumes from the project root
+        datadir = os.path.join('..', datadir)
+    return send_from_directory(datadir, path)
 
 
 def add_routes(datadir):
@@ -35,6 +45,9 @@ def add_routes(datadir):
             graphiql=True,
             get_context=lambda: Context(datastore=Datastore(datadir)),
             batch=True))
+
+    view = partial(send_file, datadir)
+    app.add_url_rule('/files/<path:path>', 'send_file', view)
 
 
 CONFIGTEMPLATE = {

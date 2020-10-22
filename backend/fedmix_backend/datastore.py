@@ -4,12 +4,12 @@ import json
 
 class Datastore:
     def __init__(self, path):
-        self._path = path
+        self.path = path
         self.datasets = dict()
         self.load_datasets()
 
     def load_datasets(self):
-        with os.scandir(self._path) as directories:
+        with os.scandir(self.path) as directories:
             for directory in directories:
                 if directory.is_dir():
                     if 'manifest.json' in os.listdir(directory.path):
