@@ -42,7 +42,7 @@
                 <p>Number of images: {{ selected_folders[name].images.length }}</p>
                 <nuxt-link
                   :to="{
-                    name: 'researcher-view',
+                    name: 'old-researcher-view',
                     query: { name },
                     params: { selected_folders },
                   }"
@@ -118,14 +118,7 @@ export default {
         }
       }
       this.folders = []
-      // localStorage.selected_folders = JSON.stringify(this.selected_folders)
-      // localStorage.setItem(
-      //   'selected_folders',
-      //   JSON.stringify(this.selected_folders)
-      // )
-      // console.log('Selected', localStorage.getItem('selected_folders'))
-
-      // console.log('class', this.selected_folders)
+      
     },
     removeFolder(name) {
       if (name in this.selected_folders) {
