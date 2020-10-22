@@ -20,10 +20,28 @@ def build_url(datadir, datasetname, path):
     return os.path.join(host_url, datadir, datasetname, path)
 
 
+class Algorithm(ObjectType):
+    name = NonNull(String)
+    predictedMasks = List(String)
+
+    def __init__(self, algorithm, parent, **args):
+        super().__init__(**args)
+        self._parent = parent
+        self._algorithm = algorithm
+
+    @staticmethod
+    def resolve_predictedMasks(root, info):
+        return [
+            build_url('files', root._parent.id, predicted_mask)
+            for predicted_mask in sorted(root._algorithm['predicted_masks'])
+        ]
+
+
 class Case(ObjectType):
-    id = NonNull(String)
+    id = NonNull(ID)
     scans = List(String)
     groundTruthMasks = List(String)
+    algorithms = List(Algorithm)
 
     def __init__(self, case, parent, **args):
         super().__init__(**args)
@@ -42,6 +60,13 @@ class Case(ObjectType):
         return [
             build_url('files', root._parent.id, ground_truth_mask)
             for ground_truth_mask in sorted(root._case['ground_truth_masks'])
+        ]
+
+    @staticmethod
+    def resolve_algorithms(root, info):
+        return [
+            Algorithm(algorithm, root._parent, name=name)
+            for name, algorithm in root._case['algorithms'].items()
         ]
 
 

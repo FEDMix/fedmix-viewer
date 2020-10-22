@@ -69,3 +69,33 @@ def test_dataset_detail(schema):
             0] == 'http://localhost/files/dataset-1/files/scans/0/0.png'
         assert data['data']['datasets'][1]['cases'][0]['scans'][
             0] == 'http://localhost/files/dataset-2/files/scans/0/0.png'
+
+
+def test_dataset_algorithm_detail(schema):
+    client = Client(schema)
+    with app.test_request_context("/graphql"):
+        data = client.execute(
+            '''
+            {
+                datasets {
+                    id
+                    cases {
+                        id
+                        algorithms {
+                            name
+                            predictedMasks
+                        }
+                    }
+                }
+            }
+            ''',
+            context=Context(datastore=Datastore('tests/mock-data/')))
+
+        print(data)
+        assert data['data']['datasets'][0]['id'] == 'dataset-1'
+
+        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
+            'name'] == 'algorithm_1'
+        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
+            'predictedMasks'][
+                0] == 'http://localhost/files/dataset-1/files/predicted_masks/algorithm_1/0/0.png'
