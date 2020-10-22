@@ -1,26 +1,43 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="12" md="6" align-self="center">
+      <v-col cols="12" sm="12" md="3" align-self="center">
         <v-select
           v-model="selectedAlgorithm"
-          :items="getAlgorithms()"
+          :items="allAlgorithms"
           item-text="state"
           label="Select Algorithm"
         ></v-select>
       </v-col>
-      <v-col cols="12" sm="12" md="6" align-self="center">
-        <v-subheader>Case No: {{ sliderData[sliderValue] }}</v-subheader>
+      <v-col cols="12" sm="12" md="3" align-self="center">
+        <v-subheader>Case No: {{ caseNumbers[caseValue] }}</v-subheader>
         <v-slider
-          v-if="sliderData.length"
-          v-model="sliderValue"
-          :max="sliderData.length - 1"
+          v-if="caseNumbers.length"
+          v-model="caseValue"
+          :max="caseNumbers.length - 1"
           :thumb-size="20"
         >
           <template v-slot:thumb-label>
-            {{ sliderData[sliderValue] }}
+            {{ caseNumbers[caseValue] }}
           </template>
         </v-slider>
+      </v-col>
+      <v-col cols="12" sm="12" md="3" align-self="center">
+        <v-subheader>Slice No: {{ slicesNumbers[sliceValue] }}</v-subheader>
+        <v-slider
+          v-if="slicesNumbers.length"
+          v-model="sliceValue"
+          :max="slicesNumbers.length - 1"
+          :thumb-size="20"
+        >
+          <template v-slot:thumb-label>
+            {{ slicesNumbers[sliceValue] }}
+          </template>
+        </v-slider>
+      </v-col>
+      <v-col cols="12" sm="12" md="3" align-self="center">
+        <v-subheader>Surface Dice: {{ surfaceDice }}</v-subheader>
+        <v-slider v-model="surfaceDice" min="1" max="10" :thumb-size="20"> </v-slider>
       </v-col>
     </v-row>
     <v-row>
@@ -31,28 +48,57 @@
         <SliceChart :format-data="formatSliceChartData" />
       </v-col>
     </v-row>
+    <v-row>
+      <v-col v-for="algorithm in algorithms" :key="algorithm" xs="12" sm="6" lg="3">
+        <ScansGrid
+          :cases="scans"
+          :algorithm="algorithm"
+          :caseNo="caseNo"
+          :sliceNo="sliceNo"
+          :distanceThreshold="surfaceDice"
+        ></ScansGrid>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import data from '~/static/mocked-data/cases'
+import scansData from '~/static/mocked-data/manifest'
+import ScansGrid from '~/components/ScansGrid'
 export default {
   name: 'Algorithm',
-
+  components: { ScansGrid },
   data() {
     return {
-      cases: data,
+      scans: scansData,
+      cases: scansData.cases,
       selectedAlgorithm: 'all',
-      sliderValue: 0,
+      caseValue: 0,
+      sliceValue: 0,
+      surfaceDice: 1,
+      allAlgorithms: [],
+      algorithms: ['ground_truth'],
     }
   },
   computed: {
-    sliderData() {
+    caseNumbers() {
       return Object.keys(this.cases)
     },
     caseNo() {
-      return this.sliderData[this.sliderValue]
+      return this.caseNumbers[this.caseValue]
     },
+    slicesNumbers() {
+      return Object.keys(this.cases[this.caseNo]['scans'])
+    },
+    sliceNo() {
+      return this.slicesNumbers[this.sliceValue]
+    },
+  },
+  mounted() {
+    this.getAlgorithms()
+    this.allAlgorithms = [...this.algorithms]
+    this.allAlgorithms.shift()
+    this.allAlgorithms.push('all')
   },
   methods: {
     formatCases(diceType) {
@@ -98,11 +144,10 @@ export default {
       return formattedData
     },
     getAlgorithms() {
-      if (this.cases && Object.keys(this.cases).length > 0) {
-        const algorithms = Array.from(Object.keys(this.cases[10].algorithms))
-        algorithms.push('all')
-        return algorithms
+      for (const algorithm of this.scans.metadata.clusters) {
+        this.algorithms.push(algorithm.name)
       }
+      return this.algorithms
     },
   },
 }
