@@ -13,15 +13,15 @@
     "cases": {
         "0": {
             "scans": [
-                "files/scans/0/0.png"
+                "images/logo.png"
             ],
             "ground_truth_masks": [
-                "files/scans/0/0.png"
+                "images/logo.png"
             ],
             "algorithms": {
                 "algorithm_1": {
                     "predicted_masks": [
-                        "files/predicted_masks/algorithm_1/0/0.png"
+                        "images/logo.png"
                     ],
                     "metrics": {
                         "metric1": {

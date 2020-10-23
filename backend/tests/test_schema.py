@@ -72,7 +72,7 @@ def test_dataset_detail(schema):
         assert data['data']['datasets'][0]['id'] == 'dataset-1'
 
         assert data['data']['datasets'][0]['cases'][0]['scans'][
-            0] == 'http://localhost/files/dataset-1/files/scans/0/0.png'
+            0] == 'http://localhost/files/dataset-1/images/logo.png'
         assert data['data']['datasets'][1]['cases'][0]['scans'][
             0] == 'http://localhost/files/dataset-2/files/scans/0/0.png'
 
@@ -110,7 +110,7 @@ def test_dataset_algorithm_detail(schema):
         assert (
             data['data']['datasets'][0]['cases'][0]['algorithms'][0]
             ['predictedMasks'][0] ==
-            'http://localhost/files/dataset-1/files/predicted_masks/algorithm_1/0/0.png'  # noqa: E501
+            'http://localhost/files/dataset-1/images/logo.png'  # noqa: E501
         )
 
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][

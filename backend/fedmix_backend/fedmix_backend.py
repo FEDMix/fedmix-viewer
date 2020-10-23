@@ -2,7 +2,7 @@ import configparser
 import os
 from functools import partial
 
-from flask import Flask, redirect, send_from_directory, url_for
+from flask import Flask, redirect, send_file, url_for
 from flask_graphql import GraphQLView
 from graphene import Context
 
@@ -18,35 +18,30 @@ def index():
     return redirect(url_for('graphql'))
 
 
-def send_file(datadir, path):
-    if not os.path.isabs(datadir):
-        # We prepend .. to the datadir because send_from_directory
-        # is relative to the module root, which is fedmix_backend
-        # but the configuration assumes from the project root
-        datadir = os.path.join('..', datadir)
-    return send_from_directory(datadir, path)
+def get_image(datastore, path):
+    path = os.path.join(datastore.abspath, path)
+    return send_file(path)
 
 
 def add_routes(datadir):
-    app.add_url_rule(
-        '/graphql',
-        view_func=GraphQLView.as_view(
-            'graphql',
-            schema=get_schema(),
-            graphiql=True,
-            get_context=lambda: Context(datastore=Datastore(datadir))))
+    datastore = Datastore(datadir)
+    app.add_url_rule('/graphql',
+                     view_func=GraphQLView.as_view(
+                         'graphql',
+                         schema=get_schema(),
+                         graphiql=True,
+                         get_context=lambda: Context(datastore=datastore)))
 
     # Optional, for adding batch query support (used in Apollo-Client)
-    app.add_url_rule(
-        '/graphql',
-        view_func=GraphQLView.as_view(
-            'graphql-batch',
-            schema=get_schema(),
-            graphiql=True,
-            get_context=lambda: Context(datastore=Datastore(datadir)),
-            batch=True))
+    app.add_url_rule('/graphql',
+                     view_func=GraphQLView.as_view(
+                         'graphql-batch',
+                         schema=get_schema(),
+                         graphiql=True,
+                         get_context=lambda: Context(datastore=datastore),
+                         batch=True))
 
-    view = partial(send_file, datadir)
+    view = partial(get_image, datastore)
     app.add_url_rule('/files/<path:path>', 'send_file', view)
 
 
