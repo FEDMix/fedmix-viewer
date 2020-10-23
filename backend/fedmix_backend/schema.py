@@ -135,13 +135,17 @@ class Dataset(ObjectType):
 
 
 class Query(ObjectType):
-    datasets = List(Dataset)
+    datasets = List(Dataset, ids=List(ID))
 
     @staticmethod
-    def resolve_datasets(root, info):
+    def resolve_datasets(root, info, ids=None):
         sets = info.context.datastore.datasets
         datasets = []
-        for key in sorted(sets.keys()):
+        keys = ids
+        if not keys:
+            keys = sorted(sets.keys())
+
+        for key in keys:
             datasets.append(Dataset(sets[key], id=key))
         return datasets
 
