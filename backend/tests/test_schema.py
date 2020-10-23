@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """Tests for the fedmix_backend module.
 """
-import flask
 from graphene import Context
 from graphene.test import Client
 
@@ -108,9 +107,11 @@ def test_dataset_algorithm_detail(schema):
 
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'name'] == 'algorithm_1'
-        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
-            'predictedMasks'][
-                0] == 'http://localhost/files/dataset-1/files/predicted_masks/algorithm_1/0/0.png'
+        assert (
+            data['data']['datasets'][0]['cases'][0]['algorithms'][0]
+            ['predictedMasks'][0] ==
+            'http://localhost/files/dataset-1/files/predicted_masks/algorithm_1/0/0.png'  # noqa: E501
+        )
 
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'metrics'][0]['name'] == 'metric1'
