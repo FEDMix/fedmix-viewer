@@ -39,3 +39,9 @@ def test_get_simple(client):
     # Check the individual properties
     assert data['data']['datasets'][0]['id'] == 'dataset-1'
     assert data['data']['datasets'][1]['id'] == 'dataset-2'
+
+
+def test_get_image(client):
+    rv = client.get('/files/dataset-1/images/logo.png')
+
+    assert rv.status_code == 200
