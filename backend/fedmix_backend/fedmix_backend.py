@@ -2,15 +2,30 @@ import configparser
 import os
 from functools import partial
 
-from flask import Flask, redirect, send_file, url_for
+from flask import Flask, json, redirect, send_file, url_for
 from flask_graphql import GraphQLView
 from graphene import Context
+from werkzeug.exceptions import HTTPException
 
 from .datastore import Datastore
 from .schema import get_schema
-from .validate_config import validate_config
 
 app = Flask(__name__)
+
+
+@app.errorhandler(HTTPException)
+def handle_exception(e):
+    """Return JSON instead of HTML for HTTP errors."""
+    # start with the correct headers and status code from the error
+    response = e.get_response()
+    # replace the body with JSON
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
 
 
 @app.route('/')
@@ -23,8 +38,8 @@ def get_image(datastore, path):
     return send_file(path)
 
 
-def add_routes(datadir):
-    datastore = Datastore(datadir)
+def add_routes(datadir, remote_url):
+    datastore = Datastore(datadir, remote_url)
     app.add_url_rule('/graphql',
                      view_func=GraphQLView.as_view(
                          'graphql',
@@ -45,29 +60,11 @@ def add_routes(datadir):
     app.add_url_rule('/files/<path:path>', 'send_file', view)
 
 
-CONFIGTEMPLATE = {
-    'app': {
-        'host': 'str',
-        'port': 5000,
-        'schema': 'str'
-    },
-    'datastore': {
-        'directory': 'str'
-    }
-}
-
-
 def main():
     # Read local file `config.ini`
     config = configparser.ConfigParser()
     configs = config.read('config/config.ini')
     print("Read configuration from: ", configs)
-
-    validation_errors = validate_config(config, CONFIGTEMPLATE)
-    if validation_errors:
-        print("Found some issues with the config file")
-        for error in validation_errors:
-            print(error)
 
     if 'app' in config:
         hostname = config['app'].get('host', '127.0.0.1')
@@ -87,7 +84,12 @@ def main():
         ''')
 
     datadir = config['datastore']['directory']
-    add_routes(datadir)
+    remote_url = f'{schema}://{hostname}:{port}'
+    if 'remote_url' in config['datastore']:
+        remote_url = config['datastore']['remote_url']
+
+    print("Using remote url: ", remote_url)
+    add_routes(datadir, remote_url)
     app.run()
 
 
