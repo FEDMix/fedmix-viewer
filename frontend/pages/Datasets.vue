@@ -13,11 +13,6 @@
                 </v-list-item-subtitle>
                 <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
-
-              <v-list-item-action>
-                <v-list-item-action-text v-text="item.action"></v-list-item-action-text>
-                <v-btn :to="'/researcher-view/algorithm'">View</v-btn>
-              </v-list-item-action>
             </v-list-item>
 
             <v-divider v-if="index < datasets.length - 1" :key="index"></v-divider>

@@ -1,0 +1,23 @@
+query datasets($ids: [ID!]!) {
+  datasets(ids: $ids) {
+    id
+    title
+    clusters {
+      name
+    }
+    cases {
+      id
+      scans
+      groundTruthMasks
+      algorithms {
+        name
+        predictedMasks
+        metrics {
+          name
+          valueForCase
+          valuesPerSlice
+        }
+      }
+    }
+  }
+}

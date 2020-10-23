@@ -89,7 +89,10 @@ export default {
       target: 'http://localhost:5000',
       pathRewrite: {
         '^/api': '/graphql',
-      },
+      }
+    },
+    '/files': {
+      target: 'http://localhost:5000',
     },
   },
   /**
