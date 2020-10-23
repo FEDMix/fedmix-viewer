@@ -8,6 +8,15 @@ $ cd fedmix-viewer
 $ make install
 ```
 
+Make a data dir and copy the data into it
+```
+$ cd fedmix-viewer/backend
+$ mkdir data
+$ cd data
+$ cp -r YOUR_DATA .
+```
+Take the manifest.json from the FedMix sharepoint and replace the manifest in the data dir with that
+
 ## Run
 ```
 $ make serve
