@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import scansData from '~/static/mocked-data/manifest'
+import scansData from '~/static/mocked-data/data_artificial/manifest'
 import ScansGrid from '~/components/ScansGrid'
 export default {
   name: 'Algorithm',
