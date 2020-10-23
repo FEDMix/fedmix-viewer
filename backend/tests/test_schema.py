@@ -9,7 +9,7 @@ from fedmix_backend import Datastore, app
 
 
 def test_empty(schema):
-    assert (schema)
+    assert schema
 
 
 def test_dataset_list(schema):
@@ -107,11 +107,9 @@ def test_dataset_algorithm_detail(schema):
 
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'name'] == 'algorithm_1'
-        assert (
-            data['data']['datasets'][0]['cases'][0]['algorithms'][0]
-            ['predictedMasks'][0] ==
-            'http://localhost/files/dataset-1/images/logo.png'  # noqa: E501
-        )
+        assert (data['data']['datasets'][0]['cases'][0]['algorithms'][0]
+                ['predictedMasks'][0] ==
+                'http://localhost/files/dataset-1/images/logo.png')
 
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'metrics'][0]['name'] == 'metric1'

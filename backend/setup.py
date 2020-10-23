@@ -27,7 +27,7 @@ with open('README.rst') as readme_file:
 setup(
     name='fedmix_backend',
     version=get_version('fedmix_backend/__version__.py'),
-    description="",
+    description="GraphQL backend for the fedmix frontend",
     long_description=readme + '\n\n',
     author="Berend Weel",
     author_email='b.weel@esciencecenter.nl',
@@ -71,7 +71,7 @@ setup(
     tests_require=[
         'pytest',
         'pytest-cov',
-        'pytest-flake8',
+        'pytest-pylint',
     ],
     extras_require={
         'dev': ['prospector[with_pyroma]', 'yapf', 'isort'],

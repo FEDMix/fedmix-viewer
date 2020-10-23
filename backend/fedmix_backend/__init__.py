@@ -11,3 +11,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "Berend Weel"
 __email__ = 'b.weel@esciencecenter.nl'
+
+__all__ = [
+    '__version__', 'get_schema', 'Datastore', 'app', 'main', 'add_routes'
+]
