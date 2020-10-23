@@ -8,7 +8,7 @@ $ cd fedmix-viewer
 $ make install
 ```
 
-Make a data dir and copy the data into it
+Make a data dir and copy the data_artificial into it
 ```
 $ cd fedmix-viewer/backend
 $ mkdir data
