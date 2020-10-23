@@ -117,3 +117,21 @@ def test_dataset_algorithm_detail(schema):
             'metrics'][0]['valueForCase'] == 0.7
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'metrics'][0]['valuesPerSlice'] == [0.1, 0.2, 0.3, 0.4]
+
+
+def test_dataset_single_details(schema):
+    client = Client(schema)
+    with app.test_request_context("/graphql"):
+        data = client.execute(
+            '''
+            {
+                datasets(ids: ["dataset-1"]) {
+                    id
+                }
+            }
+            ''',
+            context=Context(datastore=Datastore('tests/mock-data/')))
+
+        print(data)
+        assert len(data['data']['datasets']) == 1
+        assert data['data']['datasets'][0]['id'] == 'dataset-1'
