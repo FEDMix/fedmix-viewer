@@ -5,13 +5,40 @@ import json
 
 from flask import request
 
-from graphene import List, ObjectType, Field, String, ID, Int, Schema, NonNull
+from graphene import List, ObjectType, Field, String, ID, Int, Schema, NonNull, Float
 
 logger = logging.getLogger(__name__)
 
 
 class Cluster(ObjectType):
-    name = NonNull(String)
+    name = NonNull(ID)
+    patients = List(Int)
+
+    def __init__(self, cluster, **args):
+        super().__init__(**args)
+        self._cluster = cluster
+
+    @staticmethod
+    def resolve_patients(root, info):
+        return root._cluster['patients']
+
+
+class Metric(ObjectType):
+    name = NonNull(ID)
+    valueForCase = Float()
+    valuesPerSlice = List(Float)
+
+    def __init__(self, metric, **args):
+        super().__init__(**args)
+        self._metric = metric
+
+    @staticmethod
+    def resolve_valueForCase(root, info):
+        return root._metric['value_for_patient']
+
+    @staticmethod
+    def resolve_valuesPerSlice(root, info):
+        return root._metric['values_per_slice']
 
 
 def build_url(datadir, datasetname, path):
@@ -21,8 +48,9 @@ def build_url(datadir, datasetname, path):
 
 
 class Algorithm(ObjectType):
-    name = NonNull(String)
+    name = NonNull(ID)
     predictedMasks = List(String)
+    metrics = List(Metric)
 
     def __init__(self, algorithm, parent, **args):
         super().__init__(**args)
@@ -34,6 +62,13 @@ class Algorithm(ObjectType):
         return [
             build_url('files', root._parent.id, predicted_mask)
             for predicted_mask in sorted(root._algorithm['predicted_masks'])
+        ]
+
+    @staticmethod
+    def resolve_metrics(root, info):
+        return [
+            Metric(metric, name=name)
+            for name, metric in root._algorithm['metrics'].items()
         ]
 
 
@@ -88,7 +123,7 @@ class Dataset(ObjectType):
     @staticmethod
     def resolve_clusters(root, info):
         return [
-            Cluster(name=cluster['name'])
+            Cluster(cluster, name=cluster['name'])
             for cluster in root._dataset['clusters']
         ]
 

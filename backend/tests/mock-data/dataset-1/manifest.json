@@ -2,10 +2,12 @@
     "title": "My First Dataset",
     "clusters": [
         {
-            "name": "cluster1"
+            "name": "cluster1",
+            "patients": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
         },
         {
-            "name": "cluster2"
+            "name": "cluster2",
+            "patients": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
         }
     ],
     "cases": {
@@ -20,7 +22,13 @@
                 "algorithm_1": {
                     "predicted_masks": [
                         "files/predicted_masks/algorithm_1/0/0.png"
-                    ]
+                    ],
+                    "metrics": {
+                        "metric1": {
+                            "value_for_patient": 0.7,
+                            "values_per_slice": [0.1, 0.2, 0.3, 0.4]
+                        }
+                    }
                 }
             }
         }

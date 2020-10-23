@@ -22,6 +22,7 @@ def test_dataset_list(schema):
             title
             clusters {
                 name
+                patients
             }
         }
     }''',
@@ -41,7 +42,13 @@ def test_dataset_list(schema):
     assert data['data']['datasets'][1]['title'] == 'My Second Dataset'
 
     assert data['data']['datasets'][0]['clusters'][0]['name'] == 'cluster1'
+    assert data['data']['datasets'][0]['clusters'][0]['patients'] == [
+        0, 2, 4, 6, 8, 10, 12, 14, 16, 18
+    ]
     assert data['data']['datasets'][0]['clusters'][1]['name'] == 'cluster2'
+    assert data['data']['datasets'][0]['clusters'][1]['patients'] == [
+        1, 3, 5, 7, 9, 11, 13, 15, 17, 19
+    ]
 
 
 def test_dataset_detail(schema):
@@ -84,6 +91,11 @@ def test_dataset_algorithm_detail(schema):
                         algorithms {
                             name
                             predictedMasks
+                            metrics {
+                                name
+                                valueForCase
+                                valuesPerSlice
+                            }
                         }
                     }
                 }
@@ -99,3 +111,10 @@ def test_dataset_algorithm_detail(schema):
         assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
             'predictedMasks'][
                 0] == 'http://localhost/files/dataset-1/files/predicted_masks/algorithm_1/0/0.png'
+
+        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
+            'metrics'][0]['name'] == 'metric1'
+        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
+            'metrics'][0]['valueForCase'] == 0.7
+        assert data['data']['datasets'][0]['cases'][0]['algorithms'][0][
+            'metrics'][0]['valuesPerSlice'] == [0.1, 0.2, 0.3, 0.4]
