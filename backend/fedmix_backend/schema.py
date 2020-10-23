@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import json
 
 from flask import request
-
-from graphene import List, ObjectType, Field, String, ID, Int, Schema, NonNull, Float
+from graphene import (ID, Float, Int, List, NonNull, ObjectType, Schema,
+                      String)
 
 logger = logging.getLogger(__name__)
 
@@ -25,19 +24,19 @@ class Cluster(ObjectType):
 
 class Metric(ObjectType):
     name = NonNull(ID)
-    valueForCase = Float()
-    valuesPerSlice = List(Float)
+    value_for_case = Float()
+    values_per_slice = List(Float)
 
     def __init__(self, metric, **args):
         super().__init__(**args)
         self._metric = metric
 
     @staticmethod
-    def resolve_valueForCase(root, info):
+    def resolve_value_for_case(root, info):
         return root._metric['value_for_patient']
 
     @staticmethod
-    def resolve_valuesPerSlice(root, info):
+    def resolve_values_per_slice(root, info):
         return root._metric['values_per_slice']
 
 
@@ -49,7 +48,7 @@ def build_url(datadir, datasetname, path):
 
 class Algorithm(ObjectType):
     name = NonNull(ID)
-    predictedMasks = List(String)
+    predicted_masks = List(String)
     metrics = List(Metric)
 
     def __init__(self, algorithm, parent, **args):
@@ -58,7 +57,7 @@ class Algorithm(ObjectType):
         self._algorithm = algorithm
 
     @staticmethod
-    def resolve_predictedMasks(root, info):
+    def resolve_predicted_masks(root, info):
         return [
             build_url('files', root._parent.id, predicted_mask)
             for predicted_mask in sorted(root._algorithm['predicted_masks'])
@@ -75,7 +74,7 @@ class Algorithm(ObjectType):
 class Case(ObjectType):
     id = NonNull(ID)
     scans = List(String)
-    groundTruthMasks = List(String)
+    ground_truth_masks = List(String)
     algorithms = List(Algorithm)
 
     def __init__(self, case, parent, **args):
@@ -91,7 +90,7 @@ class Case(ObjectType):
         ]
 
     @staticmethod
-    def resolve_groundTruthMasks(root, info):
+    def resolve_ground_truth_masks(root, info):
         return [
             build_url('files', root._parent.id, ground_truth_mask)
             for ground_truth_mask in sorted(root._case['ground_truth_masks'])

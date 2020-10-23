@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 import logging
 
@@ -20,12 +19,11 @@ class Datastore:
                 for directory in directories:
                     if directory.is_dir():
                         if 'manifest.json' in os.listdir(directory.path):
-                            self.datasets[directory.name] = self.load_dataset(
-                                directory)
-        except FileNotFoundError as e:
-            print(f"Could not find data directory!")
-            raise e
+                            self.load_dataset(directory)
+        except FileNotFoundError as error:
+            print("Could not find data directory!")
+            raise error
 
     def load_dataset(self, directory):
         with open(os.path.join(directory, 'manifest.json')) as file:
-            return json.load(file)
+            self.datasets[directory.name] = json.load(file)
