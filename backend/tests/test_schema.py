@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 """Tests for the fedmix_backend module.
 """
-from graphene import Context
-from graphene.test import Client
-
+import graphene
+import graphene.test
 from fedmix_backend import Datastore, app
 
 
@@ -13,7 +12,7 @@ def test_empty(schema):
 
 
 def test_dataset_list(schema):
-    client = Client(schema)
+    client = graphene.test.Client(schema)
     data = client.execute(
         '''{
         datasets {
@@ -25,7 +24,8 @@ def test_dataset_list(schema):
             }
         }
     }''',
-        context=Context(datastore=Datastore('tests/mock-data/')))
+        context=graphene.Context(
+            datastore=Datastore('tests/mock-data/', 'http://localhost/')))
 
     print(data)
     # Check if all datasets are there
@@ -51,7 +51,7 @@ def test_dataset_list(schema):
 
 
 def test_dataset_detail(schema):
-    client = Client(schema)
+    client = graphene.test.Client(schema)
     with app.test_request_context("/graphql"):
         data = client.execute(
             '''
@@ -66,7 +66,8 @@ def test_dataset_detail(schema):
                 }
             }
             ''',
-            context=Context(datastore=Datastore('tests/mock-data/')))
+            context=graphene.Context(
+                datastore=Datastore('tests/mock-data/', 'http://localhost/')))
 
         print(data)
         assert data['data']['datasets'][0]['id'] == 'dataset-1'
@@ -78,7 +79,7 @@ def test_dataset_detail(schema):
 
 
 def test_dataset_algorithm_detail(schema):
-    client = Client(schema)
+    client = graphene.test.Client(schema)
     with app.test_request_context("/graphql"):
         data = client.execute(
             '''
@@ -100,7 +101,8 @@ def test_dataset_algorithm_detail(schema):
                 }
             }
             ''',
-            context=Context(datastore=Datastore('tests/mock-data/')))
+            context=graphene.Context(
+                datastore=Datastore('tests/mock-data/', 'http://localhost/')))
 
         print(data)
         assert data['data']['datasets'][0]['id'] == 'dataset-1'
@@ -120,7 +122,7 @@ def test_dataset_algorithm_detail(schema):
 
 
 def test_dataset_single_details(schema):
-    client = Client(schema)
+    client = graphene.test.Client(schema)
     with app.test_request_context("/graphql"):
         data = client.execute(
             '''
@@ -130,7 +132,8 @@ def test_dataset_single_details(schema):
                 }
             }
             ''',
-            context=Context(datastore=Datastore('tests/mock-data/')))
+            context=graphene.Context(
+                datastore=Datastore('tests/mock-data/', 'http://localhost/')))
 
         print(data)
         assert len(data['data']['datasets']) == 1

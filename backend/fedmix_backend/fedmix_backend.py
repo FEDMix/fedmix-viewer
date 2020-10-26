@@ -14,15 +14,15 @@ app = Flask(__name__)
 
 
 @app.errorhandler(HTTPException)
-def handle_exception(e):
+def handle_exception(exception):
     """Return JSON instead of HTML for HTTP errors."""
     # start with the correct headers and status code from the error
-    response = e.get_response()
+    response = exception.get_response()
     # replace the body with JSON
     response.data = json.dumps({
-        "code": e.code,
-        "name": e.name,
-        "description": e.description,
+        "code": exception.code,
+        "name": exception.name,
+        "description": exception.description,
     })
     response.content_type = "application/json"
     return response

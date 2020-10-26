@@ -3,7 +3,7 @@ from fedmix_backend import Datastore
 
 
 def test_datastore():
-    datastore = Datastore('tests/mock-data/')
+    datastore = Datastore('tests/mock-data/', 'http://localhost/')
 
     assert sorted(list(datastore.datasets)) == ['dataset-1', 'dataset-2']
     assert 'title' in datastore.datasets['dataset-1']
@@ -11,4 +11,4 @@ def test_datastore():
 
 def test_datastore_nonexist():
     with pytest.raises(FileNotFoundError):
-        Datastore('this/does/not/exists')
+        Datastore('this/does/not/exists', 'http://localhost/')

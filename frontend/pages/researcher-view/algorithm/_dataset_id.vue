@@ -83,7 +83,6 @@ export default {
       },
       result(data, key) {
         this.dataset = data.data.datasets[0]
-        console.log(this.dataset)
         this.getAlgorithms()
         this.cases = this.dataset.cases
       },

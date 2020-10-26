@@ -8,7 +8,7 @@ from fedmix_backend import add_routes, app
 @pytest.fixture(scope="module", autouse=True)
 def add_test_data_folder():
     print(os.getcwd())
-    add_routes('tests/mock-data/')
+    add_routes('tests/mock-data/', 'http://localhost/')
 
 
 @pytest.fixture(name='client')

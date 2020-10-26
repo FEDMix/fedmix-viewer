@@ -3,9 +3,9 @@
 import logging
 
 from .__version__ import __version__
-from .schema import get_schema
 from .datastore import Datastore
-from .fedmix_backend import app, main, add_routes
+from .fedmix_backend import add_routes, app, main
+from .schema import get_schema
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
