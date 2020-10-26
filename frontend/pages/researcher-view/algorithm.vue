@@ -58,7 +58,7 @@
                 v-on="on"
                 v-bind="attrs"
                 v-if="index === algorithms.length - 1"
-                :disabled="selected.length < 2"
+                :disabled="selected.length != 2"
               >
                 Compare
               </v-btn>
@@ -89,7 +89,6 @@
           ></ScansGrid>
         </div>
       </v-col>
-      {{ selected }}
     </v-row>
   </v-container>
 </template>
