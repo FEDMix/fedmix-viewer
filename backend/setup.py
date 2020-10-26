@@ -39,6 +39,7 @@ setup(
         'graphene>=2.1.8, <3',
         'flask>=1.1.2, <2',
         'flask-graphql>=2.0.1, <3',
+        'natsort>=7, <8',
     ],
     include_package_data=True,
     license="Apache Software License 2.0",

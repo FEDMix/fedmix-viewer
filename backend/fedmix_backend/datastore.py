@@ -6,8 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 class Datastore:
-    def __init__(self, path):
+    def __init__(self, path, remote_url):
         self.path = path
+        self.remote_url = remote_url
         self.datasets = dict()
         self.load_datasets()
 

@@ -2,9 +2,8 @@
 import logging
 import os
 
-from flask import request
-from graphene import (ID, Float, Int, List, NonNull, ObjectType, Schema,
-                      String)
+from graphene import ID, Float, Int, List, NonNull, ObjectType, Schema, String
+from natsort import natsorted
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +39,8 @@ class Metric(ObjectType):
         return root._metric['values_per_slice']
 
 
-def build_url(datadir, datasetname, path):
-    host_url = request.host_url
+def build_url(datastore, datadir, datasetname, path):
+    host_url = datastore.remote_url
 
     return os.path.join(host_url, datadir, datasetname, path)
 
@@ -59,8 +58,10 @@ class Algorithm(ObjectType):
     @staticmethod
     def resolve_predicted_masks(root, info):
         return [
-            build_url('files', root._parent.id, predicted_mask)
-            for predicted_mask in sorted(root._algorithm['predicted_masks'])
+            build_url(info.context.datastore, 'files', root._parent.id,
+                      predicted_mask)
+            for predicted_mask in natsorted(root._algorithm['predicted_masks'],
+                                            key=lambda y: y.lower())
         ]
 
     @staticmethod
@@ -85,15 +86,17 @@ class Case(ObjectType):
     @staticmethod
     def resolve_scans(root, info):
         return [
-            build_url('files', root._parent.id, scan)
-            for scan in sorted(root._case['scans'])
+            build_url(info.context.datastore, 'files', root._parent.id, scan)
+            for scan in natsorted(root._case['scans'], key=lambda y: y.lower())
         ]
 
     @staticmethod
     def resolve_ground_truth_masks(root, info):
         return [
-            build_url('files', root._parent.id, ground_truth_mask)
-            for ground_truth_mask in sorted(root._case['ground_truth_masks'])
+            build_url(info.context.datastore, 'files', root._parent.id,
+                      ground_truth_mask)
+            for ground_truth_mask in natsorted(
+                root._case['ground_truth_masks'], key=lambda y: y.lower())
         ]
 
     @staticmethod
@@ -128,10 +131,9 @@ class Dataset(ObjectType):
 
     @staticmethod
     def resolve_cases(root, info):
-        return [
-            Case(case, root, id=id)
-            for id, case in root._dataset['cases'].items()
-        ]
+        cases = root._dataset['cases']
+        keys = natsorted(cases.keys(), key=lambda y: y.lower())
+        return [Case(cases[id], root, id=id) for id in keys]
 
 
 class Query(ObjectType):
@@ -140,14 +142,11 @@ class Query(ObjectType):
     @staticmethod
     def resolve_datasets(root, info, ids=None):
         sets = info.context.datastore.datasets
-        datasets = []
         keys = ids
         if not keys:
-            keys = sorted(sets.keys())
+            keys = natsorted(sets.keys(), key=lambda y: y.lower())
 
-        for key in keys:
-            datasets.append(Dataset(sets[key], id=key))
-        return datasets
+        return [Dataset(sets[key], id=key) for key in keys]
 
 
 def get_schema():
