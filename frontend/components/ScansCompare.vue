@@ -10,7 +10,7 @@ export default {
       default: 1,
     },
     cases: {
-      type: Object,
+      type: Array,
       default: () => undefined,
     },
     caseNo: {
@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     canvasId() {
-      return 'comparisionView-' + this.caseNo + this.sliceNo
+      return 'comparisonView-' + this.caseNo + '-' + this.sliceNo
     },
   },
   watch: {
@@ -50,33 +50,45 @@ export default {
       if (this.cases === undefined || this.selectedAlgorithms === []) {
         return
       }
-      const imageLoadPromises = []
-      const backgroundFilePath = this.getFile()
-      const backgroundScan = this.loadImage(backgroundFilePath)
-      imageLoadPromises.push(backgroundScan)
-      this.selectedAlgorithms.map((algorithm) => {
-        const filePath = this.getFile(algorithm)
-        const scan = this.loadImage(filePath)
-        imageLoadPromises.push(scan)
-      })
 
-      this.multiSample(imageLoadPromises)
+      const backgroundImageFile = this.getFile('scans', '')
+      const maskImageFiles = this.selectedAlgorithms.map((algorithmName) =>
+        this.getFile('predictedMasks', algorithmName)
+      )
+      this.multiSample(backgroundImageFile, maskImageFiles)
     },
-    multiSample(inputScans) {
+
+    getFile(type, algorithmName) {
+      const the_case = this.cases.find((cs) => cs.id === this.caseNo)
+      if (type === 'predictedMasks') {
+        if (algorithmName !== 'ground_truth') {
+          const algorithm = the_case['algorithms'].find(
+            (algorithm) => algorithm.name === algorithmName
+          )
+          return algorithm[type][this.sliceNo]
+        }
+        return
+      } else {
+        return the_case[type][this.sliceNo]
+      }
+    },
+
+    multiSample(backgroundImageFile, maskImageFiles) {
+      const imageLoadPromises = [
+        this.loadImage(backgroundImageFile),
+        ...maskImageFiles.map(this.loadImage),
+      ]
+
+      Promise.all(imageLoadPromises).then((results) => {
+        const backgroundImage = results[0]
+        const scanImages = results.slice(1)
+        this.drawScans(backgroundImage, scanImages)
+      })
+    },
+
+    drawScans(backgroundImage, scans) {
       const cv = this.$cv
-      let targetImage = null
-      let cols = 0
-      let rows = 0
 
-      Promise.all(inputScans).then((results) => {
-        const [bg_image, algorithm1, algorithm2] = results
-        targetImage = new cv.imread(bg_image)
-        cols = targetImage.cols
-        rows = targetImage.rows
-        this.drawScans(cv, targetImage, [algorithm1, algorithm2], cols, rows)
-      })
-    },
-    drawScans(cv, targetImage, scans, cols, rows) {
       const colors = [
         [31, 120, 180, 255],
         [51, 160, 44, 255],
@@ -91,6 +103,10 @@ export default {
         [202, 178, 214, 255],
         [255, 255, 153, 255],
       ]
+
+      const targetImage = new cv.imread(backgroundImage)
+      const { cols, rows } = targetImage
+
       scans.map((scan, index) => {
         const contour_src = new cv.imread(scan)
         // Convert to binary
@@ -120,15 +136,6 @@ export default {
       cv.resize(targetImage, targetImage, dsize, 4.0, 4.0, cv.INTER_AREA)
       cv.imshow(this.canvasId, targetImage)
       targetImage.delete()
-    },
-    getFile(algorithm) {
-      if (algorithm) {
-        return (
-          '/mocked-data/data_artificial/' +
-          this.cases[this.caseNo]['algorithms'][algorithm]['predicted_masks'][this.sliceNo]
-        )
-      }
-      return '/mocked-data/data_artificial/' + this.cases[this.caseNo]['scans'][this.sliceNo]
     },
 
     /**

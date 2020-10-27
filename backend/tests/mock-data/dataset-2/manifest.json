@@ -1,4 +1,14 @@
 {
     "title": "My Second Dataset",
-    "clusters":[]
+    "clusters":[],
+    "cases": {
+        "0": {
+            "scans": [
+                "files/scans/0/0.png"
+            ],
+            "ground_truth_masks": [
+                "files/scans/0/0.png"
+            ]
+        }
+    }
 }

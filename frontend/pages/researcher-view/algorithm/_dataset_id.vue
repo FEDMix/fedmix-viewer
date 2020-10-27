@@ -51,7 +51,7 @@
     <v-row>
       <v-col v-for="(algorithm, index) in algorithms" :key="algorithm" xs="12" sm="6" lg="3">
         <div class="d-flex flex-column align-center relative">
-          <v-dialog width="500">
+          <v-dialog width="512">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="compare"
@@ -81,7 +81,7 @@
             :disabled="algorithm === 'ground_truth'"
           ></v-checkbox>
           <ScansGrid
-            :cases="scans"
+            :cases="cases"
             :algorithm="algorithm"
             :caseNo="caseNo"
             :sliceNo="sliceNo"
@@ -94,93 +94,115 @@
 </template>
 
 <script>
-import scansData from '~/static/mocked-data/data_artificial/manifest'
+import datasets_query from '~/apollo/datasets_select'
 import ScansGrid from '~/components/ScansGrid'
 import ScansCompare from '~/components/ScansCompare'
 export default {
   name: 'Algorithm',
   components: { ScansGrid, ScansCompare },
+  apollo: {
+    datasets: {
+      query: datasets_query,
+      prefetch({ route }) {
+        return {
+          ids: [route.params.dataset_id],
+        }
+      },
+      variables() {
+        return {
+          ids: [this.$route.params.dataset_id],
+        }
+      },
+      result(data, key) {
+        this.dataset = data.data.datasets[0]
+        this.getAlgorithms()
+        this.cases = this.dataset.cases
+      },
+      error(error) {
+        console.log(JSON.stringify(error.message))
+      },
+    },
+  },
   data() {
     return {
-      scans: scansData,
-      cases: scansData.cases,
+      cases: [],
+      dataset: {},
+      algorithms: [],
       selectedAlgorithm: 'all',
       caseValue: 0,
       sliceValue: 0,
       surfaceDice: 1,
       allAlgorithms: [],
-      algorithms: ['ground_truth'],
       selected: [],
     }
   },
   computed: {
     caseNumbers() {
-      return Object.keys(this.cases)
+      return this.cases.map((cs) => cs.id)
     },
     caseNo() {
       return this.caseNumbers[this.caseValue]
     },
     slicesNumbers() {
-      return Object.keys(this.cases[this.caseNo]['scans'])
+      if (this.caseNumbers.includes(this.caseNo)) {
+        const the_case = this.cases.find((cs) => cs.id === this.caseNo)
+        return Object.keys(the_case['scans'])
+      } else {
+        return []
+      }
     },
     sliceNo() {
       return this.slicesNumbers[this.sliceValue]
     },
   },
-  mounted() {
-    this.getAlgorithms()
-    this.allAlgorithms = [...this.algorithms]
-    this.allAlgorithms.shift()
-    this.allAlgorithms.push('all')
-  },
+  mounted() {},
   methods: {
     formatCases(diceType) {
       const formattedCases = []
-      Object.entries(this.cases).map((caseArray) => {
-        Object.entries(caseArray[1].algorithms).map((algorithm) => {
-          if (algorithm[0] === this.selectedAlgorithm) {
-            formattedCases.push({
-              caseNumber: caseArray[0],
-              value: algorithm[1].metrics[diceType].value_for_patient,
-              algorithm: algorithm[0],
-            })
-          } else if (this.selectedAlgorithm === 'all') {
-            formattedCases.push({
-              caseNumber: caseArray[0],
-              value: algorithm[1].metrics[diceType].value_for_patient,
-              algorithm: algorithm[0],
-            })
-          }
+      if (this.cases.length) {
+        this.cases.map((the_case) => {
+          the_case.algorithms.map((algorithm) => {
+            if (algorithm.name === this.selectedAlgorithm || this.selectedAlgorithm === 'all') {
+              const metric = algorithm.metrics.find((metric) => metric.name == diceType)
+              formattedCases.push({
+                caseNumber: the_case.id,
+                value: metric.valueForCase,
+                algorithm: algorithm.name,
+              })
+            }
+          })
         })
-      })
+      }
       return formattedCases
     },
     formatSliceChartData(diceType) {
       const formattedData = []
-      Object.entries(this.cases[this.caseNo]?.algorithms).map((algorithm, i) => {
-        algorithm[1].metrics[diceType].values_per_slice.map((dice, j) => {
-          if (algorithm[0] === this.selectedAlgorithm) {
-            formattedData.push({
-              slice: j,
-              dice,
-              algorithm: algorithm[0],
+      const the_case = this.cases.find((cs) => cs.id === this.caseNo)
+      if (the_case) {
+        the_case.algorithms.map((algorithm) => {
+          if (algorithm.name === this.selectedAlgorithm || this.selectedAlgorithm === 'all') {
+            const metric = algorithm.metrics.find((metric) => metric.name == diceType)
+            let formatted = metric.valuesPerSlice.map((dice, j) => {
+              return {
+                slice: j,
+                dice,
+                algorithm: algorithm.name,
+              }
             })
-          } else if (this.selectedAlgorithm === 'all') {
-            formattedData.push({
-              slice: j,
-              dice,
-              algorithm: algorithm[0],
-            })
+            formattedData.push(...formatted)
           }
         })
-      })
+      }
       return formattedData
     },
     getAlgorithms() {
-      for (const algorithm of this.scans.metadata.clusters) {
+      this.algorithms = ['ground_truth']
+      this.allAlgorithms = []
+      for (const algorithm of this.dataset.clusters) {
         this.algorithms.push(algorithm.name)
+        this.allAlgorithms.push(algorithm.name)
       }
-      return this.algorithms
+      this.allAlgorithms.push('all')
     },
   },
 }

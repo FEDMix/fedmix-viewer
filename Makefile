@@ -7,7 +7,7 @@ install:
 
 install-dev:
 	cd frontend && yarn
-	cd backend && pip3 install .[dev]
+	cd backend && pip3 install -e .[dev]
 
 
 serve:

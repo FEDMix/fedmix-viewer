@@ -27,7 +27,7 @@ with open('README.rst') as readme_file:
 setup(
     name='fedmix_backend',
     version=get_version('fedmix_backend/__version__.py'),
-    description="",
+    description="GraphQL backend for the fedmix frontend",
     long_description=readme + '\n\n',
     author="Berend Weel",
     author_email='b.weel@esciencecenter.nl',
@@ -39,6 +39,7 @@ setup(
         'graphene>=2.1.8, <3',
         'flask>=1.1.2, <2',
         'flask-graphql>=2.0.1, <3',
+        'natsort>=7, <8',
     ],
     include_package_data=True,
     license="Apache Software License 2.0",
@@ -71,7 +72,7 @@ setup(
     tests_require=[
         'pytest',
         'pytest-cov',
-        'pytest-flake8',
+        'pytest-pylint',
     ],
     extras_require={
         'dev': ['prospector[with_pyroma]', 'yapf', 'isort'],

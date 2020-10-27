@@ -1,5 +1,4 @@
 import pytest
-
 from fedmix_backend import get_schema
 
 

@@ -1,35 +1,37 @@
-import pytest
 import json
+import os
 
-from fedmix_backend import app, add_routes
+import pytest
+from fedmix_backend import add_routes, app
 
 
 @pytest.fixture(scope="module", autouse=True)
 def add_test_data_folder():
-    add_routes('tests/mock-data/')
+    print(os.getcwd())
+    add_routes('tests/mock-data/', 'http://localhost/')
 
 
-@pytest.fixture
-def client():
+@pytest.fixture(name='client')
+def fixture_client():
     app.config['TESTING'] = True
 
-    with app.test_client() as client:
-        yield client
+    with app.test_client() as test_client:
+        yield test_client
 
 
 def test_get_empty(client):
-    rv = client.get('/')
+    response = client.get('/')
 
-    assert rv.status_code == 302
+    assert response.status_code == 302
 
 
 def test_get_simple(client):
-    rv = client.get('/graphql?query={datasets{id}}')
+    response = client.get('/graphql?query={datasets{id}}')
 
-    assert rv.status_code == 200
+    assert response.status_code == 200
     # Check if all datasets are there
 
-    data = json.loads(rv.data.decode())
+    data = json.loads(response.data.decode())
     print(data)
 
     assert 'data' in data
@@ -39,3 +41,9 @@ def test_get_simple(client):
     # Check the individual properties
     assert data['data']['datasets'][0]['id'] == 'dataset-1'
     assert data['data']['datasets'][1]['id'] == 'dataset-2'
+
+
+def test_get_image(client):
+    response = client.get('/files/dataset-1/images/logo.png')
+
+    assert response.status_code == 200

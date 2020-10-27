@@ -10,7 +10,7 @@ export default {
       default: 1,
     },
     cases: {
-      type: Object,
+      type: Array,
       default: () => undefined,
     },
     caseNo: {
@@ -47,30 +47,30 @@ export default {
   },
   methods: {
     loadData() {
-      if (this.cases === undefined || this.cases.metadata === undefined) {
-        return
-      }
-      const backgroundFile = this.getFile('scans')
-      const groundTruthFile = this.getFile('ground_truth_masks')
-      const predictedFile = this.getFile('predicted_masks')
-      if (!predictedFile) {
-        this.processImages(backgroundFile, groundTruthFile)
-      } else {
-        this.processImages(backgroundFile, predictedFile, groundTruthFile)
+      if (this.cases) {
+        const backgroundFile = this.getFile('scans')
+        const groundTruthFile = this.getFile('groundTruthMasks')
+        const predictedFile = this.getFile('predictedMasks')
+        if (!predictedFile) {
+          this.processImages(backgroundFile, groundTruthFile)
+        } else {
+          this.processImages(backgroundFile, predictedFile, groundTruthFile)
+        }
       }
     },
 
     getFile(type) {
-      if (type === 'predicted_masks') {
+      const the_case = this.cases.find((cs) => cs.id === this.caseNo)
+      if (type === 'predictedMasks') {
         if (this.algorithm !== 'ground_truth') {
-          return (
-            '/mocked-data/data_artificial/' +
-            this.cases.cases[this.caseNo]['algorithms'][this.algorithm][type][this.sliceNo]
+          const algorithm = the_case['algorithms'].find(
+            (algorithm) => algorithm.name === this.algorithm
           )
+          return algorithm[type][this.sliceNo]
         }
         return
       } else {
-        return '/mocked-data/data_artificial/' + this.cases.cases[this.caseNo][type][this.sliceNo]
+        return the_case[type][this.sliceNo]
       }
     },
 
