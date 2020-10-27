@@ -49,14 +49,45 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="algorithm in algorithms" :key="algorithm" xs="12" sm="6" lg="3">
-        <ScansGrid
-          :cases="cases"
-          :algorithm="algorithm"
-          :caseNo="caseNo"
-          :sliceNo="sliceNo"
-          :distanceThreshold="surfaceDice"
-        ></ScansGrid>
+      <v-col v-for="(algorithm, index) in algorithms" :key="algorithm" xs="12" sm="6" lg="3">
+        <div class="d-flex flex-column align-center relative">
+          <v-dialog width="512">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="compare"
+                v-on="on"
+                v-bind="attrs"
+                v-if="index === algorithms.length - 1"
+                :disabled="selected.length != 2"
+              >
+                Compare
+              </v-btn>
+            </template>
+            <div class="d-flex">
+              <v-card>
+                <ScansCompare
+                  :cases="cases"
+                  :selectedAlgorithms="selected"
+                  :caseNo="caseNo"
+                  :sliceNo="sliceNo"
+                ></ScansCompare>
+              </v-card>
+            </div>
+          </v-dialog>
+          <v-checkbox
+            v-model="selected"
+            :label="algorithm"
+            :value="algorithm"
+            :disabled="algorithm === 'ground_truth'"
+          ></v-checkbox>
+          <ScansGrid
+            :cases="cases"
+            :algorithm="algorithm"
+            :caseNo="caseNo"
+            :sliceNo="sliceNo"
+            :distanceThreshold="surfaceDice"
+          ></ScansGrid>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -65,9 +96,10 @@
 <script>
 import datasets_query from '~/apollo/datasets_select'
 import ScansGrid from '~/components/ScansGrid'
+import ScansCompare from '~/components/ScansCompare'
 export default {
   name: 'Algorithm',
-  components: { ScansGrid },
+  components: { ScansGrid, ScansCompare },
   apollo: {
     datasets: {
       query: datasets_query,
@@ -101,6 +133,7 @@ export default {
       sliceValue: 0,
       surfaceDice: 1,
       allAlgorithms: [],
+      selected: [],
     }
   },
   computed: {
@@ -175,4 +208,13 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.relative {
+  position: relative;
+}
+.compare {
+  position: absolute;
+  right: 0px;
+  top: -20px;
+}
+</style>

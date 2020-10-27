@@ -1,8 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-center">
-    <span class="text-center">{{ algorithm }}</span>
-    <canvas :id="canvasId" :ref="canvasId" class="scan"></canvas>
-  </div>
+  <canvas :id="canvasId" :ref="canvasId" class="scan"></canvas>
 </template>
 <script>
 export default {
@@ -35,7 +32,7 @@ export default {
     },
   },
   watch: {
-    caseNo(newValue) {
+    caseNo() {
       this.loadData()
     },
     sliceNo() {
