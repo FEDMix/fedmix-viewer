@@ -47,15 +47,19 @@ export default {
   },
   methods: {
     loadData() {
-      if (this.cases) {
-        const backgroundFile = this.getFile('scans')
-        const groundTruthFile = this.getFile('groundTruthMasks')
-        const predictedFile = this.getFile('predictedMasks')
-        if (!predictedFile) {
-          this.processImages(backgroundFile, groundTruthFile)
-        } else {
-          this.processImages(backgroundFile, predictedFile, groundTruthFile)
+      try {
+        if (this.cases) {
+          const backgroundFile = this.getFile('scans')
+          const groundTruthFile = this.getFile('groundTruthMasks')
+          const predictedFile = this.getFile('predictedMasks')
+          if (!predictedFile) {
+            this.processImages(backgroundFile, groundTruthFile)
+          } else {
+            this.processImages(backgroundFile, predictedFile, groundTruthFile)
+          }
         }
+      } catch (e) {
+        console.log('🚨', e)
       }
     },
 
